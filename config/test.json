@@ -6,8 +6,20 @@
       "/nfs/disk1/snoplus/bismsb/Analysis15_802_Bronze_364311_368447_Apr2025/Analysis15_r0000366261_s001_p005.ntuple.root"
     ]
   },
-  "output": {
-    "type": "snapshot",
-    "file_name": "./test_output.ntuple.root"
-  }
+  "steps": [
+    {
+      "type": "snapshot",
+      "tree_name": "output",
+      "file_name": "test_output.ntuple.root"
+    },
+    {
+      "type": "filter",
+      "expr": "fitValid == true"
+    },
+    {
+      "type": "snapshot",
+      "tree_name": "output",
+      "file_name": "test_output_fitValid.ntuple.root"
+    }
+  ]
 }

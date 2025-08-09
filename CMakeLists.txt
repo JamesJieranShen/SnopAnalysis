@@ -20,6 +20,24 @@ find_package(ROOT REQUIRED COMPONENTS RIO Tree Hist Core ROOTDataFrame)
 
 add_subdirectory(src)
 
+find_package(Git QUIET)
+
+set(GIT_DESCRIBE "unknown")
+if(GIT_FOUND)
+  execute_process(
+    COMMAND ${GIT_EXECUTABLE} -C ${CMAKE_SOURCE_DIR} describe --tags --dirty --always
+    OUTPUT_VARIABLE GIT_DESCRIBE
+    OUTPUT_STRIP_TRAILING_WHITESPACE
+  )
+endif()
+
+configure_file(
+  "${CMAKE_SOURCE_DIR}/cmake/Config.hh.in"
+  "${CMAKE_BINARY_DIR}/generated/Config.hh"
+  @ONLY
+)
+# Make generated header visible to your targets
+target_include_directories(SnopAnalysis PUBLIC "${CMAKE_BINARY_DIR}/generated")
 
 set(TOOLS_DIR "${CMAKE_CURRENT_SOURCE_DIR}/tools")
 # Compile each script into an executable linked against the core library

@@ -1,12 +1,13 @@
 #include "SnapshotWriter.hh"
 
 #include "Logger.hh"
-#include "OutputWriterRegistry.hh"
+#include "StepRegistry.hh"
 #include "TObjString.h"
 
 namespace SnopAnalysis {
 void
 SnapshotWriter::Configure(const nlohmann::json& config) {
+  OutputWriter::Configure(config);
   fTreeName = config.value("tree_name", "output");
   fFileName = config.value("file_name", "output.ntuple.root");
 }
@@ -17,7 +18,7 @@ SnapshotWriter::Write(ROOT::RDF::RNode df) {
   if (!file || file->IsZombie()) {
     throw std::runtime_error("Failed to open output file: " + fFileName);
   }
-  Logger::Info(std::format("Creating snapshot in file: {}", fFileName));
+  Logger::Info(std::format("Creating snapshot in file: {} -- {} entries.", fFileName, df.Count().GetValue()));
 
   // Add branches to the tree based on the dataframe schema
   df.Snapshot(fTreeName, fFileName);
@@ -28,13 +29,21 @@ SnapshotWriter::Write(ROOT::RDF::RNode df) {
 }
 
 void
-SnapshotWriter::WriteConfig(nlohmann::json& config) {
+SnapshotWriter::WriteContext() const {
+  if (!fContext) {
+    Logger::Warning("No context available to write");
+  }
+  nlohmann::json ctxJson = *fContext;
+  ctxJson["step_id"] = GetStepID();
   TFile* file = TFile::Open(fFileName.c_str(), "UPDATE");
-  TObjString cfg_string(config.dump().c_str());
-  cfg_string.Write("config", TObject::kOverwrite);
+  if (!file || file->IsZombie()) {
+    throw std::runtime_error("Failed to open output file for context writing: " + fFileName);
+  }
+  TObjString ctxStr(ctxJson.dump().c_str());
+  ctxStr.Write("context", TObject::kOverwrite);
   file->Close();
   delete file;
 }
-REGISTER_OUTPUT_WRITER("snapshot", SnapshotWriter)
+REGISTER_STEP("snapshot", SnapshotWriter)
 
 } // namespace SnopAnalysis

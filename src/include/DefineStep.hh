@@ -5,7 +5,7 @@ namespace SnopAnalysis {
 class DefineStep : public Step {
 public:
   void Configure(const nlohmann::json &config) override;
-  ROOT::RDF::RNode Execute(ROOT::RDF::RNode input) override;
+  ROOT::RDF::RNode DoExecute(ROOT::RDF::RNode input) override;
 
 private:
   std::string fName;                 // name of the new colum

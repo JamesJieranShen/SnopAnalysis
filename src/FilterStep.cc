@@ -11,7 +11,7 @@ FilterStep::Configure(const nlohmann::json& config) {
 }
 
 ROOT::RDF::RNode
-FilterStep::Execute(ROOT::RDF::RNode input) {
+FilterStep::DoExecute(ROOT::RDF::RNode input) {
   return input.Filter(fExpression, fName);
 }
 

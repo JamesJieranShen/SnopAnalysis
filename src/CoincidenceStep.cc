@@ -15,7 +15,7 @@ CoincidenceStep::Configure(const nlohmann::json& config) {
 }
 
 ROOT::RDF::RNode
-CoincidenceStep::Execute(ROOT::RDF::RNode input) {
+CoincidenceStep::DoExecute(ROOT::RDF::RNode input) {
   ROOT::RDF::RNode result = input.Redefine(fTimeColumn, "static_cast<double>(" + fTimeColumn + ")");
   std::vector<double> promptTimes = result.Filter(fPromptExpr).Take<double>(fTimeColumn).GetValue();
   std::sort(promptTimes.begin(), promptTimes.end());

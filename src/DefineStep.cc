@@ -11,7 +11,7 @@ DefineStep::Configure(const nlohmann::json& config) {
 }
 
 ROOT::RDF::RNode
-DefineStep::Execute(ROOT::RDF::RNode input) {
+DefineStep::DoExecute(ROOT::RDF::RNode input) {
   return input.Define(fName, fExpression);
 }
 
