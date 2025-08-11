@@ -20,6 +20,11 @@ if(GIT_FOUND)
     OUTPUT_STRIP_TRAILING_WHITESPACE
   )
 endif()
+configure_file(
+  "${CMAKE_SOURCE_DIR}/cmake/Config.hh.in"
+  "${CMAKE_BINARY_DIR}/generated/Config.hh"
+  @ONLY
+)
 include(FetchContent)
 
 project(SnopAnalysis LANGUAGES CXX)
@@ -29,17 +34,20 @@ find_package(ROOT REQUIRED COMPONENTS RIO Tree Hist Core ROOTDataFrame)
 
 # nlohmann json
 fetchcontent_declare(
-    json
-    GIT_REPOSITORY https://github.com/nlohmann/json.git
-    GIT_TAG        v3.12.0
+  json
+  GIT_REPOSITORY https://github.com/nlohmann/json.git
+  GIT_TAG        v3.12.0
 )
 fetchcontent_makeavailable(json)
 
-configure_file(
-  "${CMAKE_SOURCE_DIR}/cmake/Config.hh.in"
-  "${CMAKE_BINARY_DIR}/generated/Config.hh"
-  @ONLY
+# CLI11
+fetchcontent_declare(
+  CLI11
+  GIT_REPOSITORY https://github.com/CLIUtils/CLI11.git
+  GIT_TAG        v2.5.0
 )
+fetchcontent_makeavailable(CLI11)
+
 
 add_subdirectory(src)
 
@@ -49,7 +57,7 @@ file(GLOB TOOL_FILES "${TOOLS_DIR}/*.cc")
 foreach(tool ${TOOL_FILES})
   get_filename_component(tool_name ${tool} NAME_WE)
   add_executable(${tool_name} ${tool})
-  target_link_libraries(${tool_name} PRIVATE SnopAnalysis)
+  target_link_libraries(${tool_name} PRIVATE SnopAnalysis CLI11::CLI11)
   target_include_directories(${tool_name} PRIVATE ${INCLUDE_DIR})
 
   add_custom_command(TARGET ${tool_name} POST_BUILD

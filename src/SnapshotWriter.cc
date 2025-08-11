@@ -31,7 +31,7 @@ SnapshotWriter::Write(ROOT::RDF::RNode df) {
 void
 SnapshotWriter::WriteContext() const {
   if (!fContext) {
-    Logger::Warning("No context available to write");
+    Logger::Warn("No context available to write");
   }
   nlohmann::json ctxJson = *fContext;
   ctxJson["step_id"] = GetStepID();

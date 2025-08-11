@@ -2,33 +2,33 @@
 
 #include <format>
 #include <iostream>
+#include <map>
 #include <string>
 
 namespace SnopAnalysis {
-enum class Verbosity { Silent = 0, Warning = 1, Info = 2, Debug = 3 };
 
 class Logger {
 public:
+  enum class Verbosity { Silent = 0, Warn = 1, Info = 2, Debug = 3 };
+  inline static std::map<std::string, Verbosity> VerbosityMap = {
+      {"silent", Verbosity::Silent}, {"warn", Verbosity::Warn}, {"info", Verbosity::Info}, {"debug", Verbosity::Debug}};
   static void SetLevel(Verbosity level) { sLevel = level; }
 
-  static void Warning(const std::string &msg) {
-    if (sLevel >= Verbosity::Warning) {
-      std::cerr << std::format("{}[WARNING] {}{}\n", Color::Yellow, msg,
-                               Color::Reset);
+  static void Warn(const std::string& msg) {
+    if (sLevel >= Verbosity::Warn) {
+      std::cerr << std::format("{}[WARNING] {}{}\n", Color::Yellow, msg, Color::Reset);
     }
   }
 
-  static void Info(const std::string &msg) {
+  static void Info(const std::string& msg) {
     if (sLevel >= Verbosity::Info) {
-      std::cerr << std::format("{}[INFO]    {}{}\n", Color::Cyan, msg,
-                               Color::Reset);
+      std::cerr << std::format("{}[INFO]    {}{}\n", Color::Cyan, msg, Color::Reset);
     }
   }
 
-  static void Debug(const std::string &msg) {
+  static void Debug(const std::string& msg) {
     if (sLevel >= Verbosity::Debug) {
-      std::cerr << std::format("{}[DEBUG]   {}{}\n", Color::Gray, msg,
-                               Color::Reset);
+      std::cerr << std::format("{}[DEBUG]   {}{}\n", Color::Gray, msg, Color::Reset);
     }
   }
 

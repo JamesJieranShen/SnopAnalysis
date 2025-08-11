@@ -3,6 +3,7 @@
 #include "Logger.hh"
 #include "StepRegistry.hh"
 
+#include <CLI/CLI.hpp>
 #include <fstream>
 #include <iostream>
 #include <nlohmann/json.hpp>
@@ -11,21 +12,51 @@ using namespace SnopAnalysis;
 
 int
 main(int argc, char** argv) {
-  if (argc < 2) {
-    std::cerr << "Usage: " << argv[0] << " <json_config_file>" << std::endl;
-    return 1;
+  CLI::App parser{"Run Analyis"};
+  std::string cfg_fname;
+  parser.add_option("config_file", cfg_fname, "Path to the configuration file")->required()->check(CLI::ExistingFile);
+
+  Logger::Verbosity verbosity = Logger::Verbosity::Info;
+  parser.add_option("-v,--verbosity", verbosity, "Verbosity level")
+      ->transform(CLI::CheckedTransformer(Logger::VerbosityMap, CLI::ignore_case))
+      ->default_val(Logger::Verbosity::Info);
+  bool mt = false;
+  int threads = 0;
+  parser.add_flag("--mt", mt, "Enable multithreading (via ROOT ImplicitMT)");
+  parser.add_option("-j,--jobs,--threads", threads, "Number of threads to use")
+      ->check(CLI::Range(1, 1024)); // NOTE: buy a new CPU immediately when this is updated.
+
+  CLI11_PARSE(parser, argc, argv);
+
+  Logger::SetLevel(verbosity);
+
+  if (!mt && threads > 1) {
+    Logger::Warn("Number of threads specified but multithreading not enabled. Ignoring thread count.");
   }
-  Logger::SetLevel(Verbosity::Debug);
+  if (!mt) {
+    Logger::Info("Running in single-threaded mode.");
+  } else {
+    if (!threads) {
+      ROOT::EnableImplicitMT();
+      Logger::Info(std::format("ROOT ImplicitMT : ON (auto) -> {} threads", ROOT::GetThreadPoolSize()));
+    } else {
+      ROOT::EnableImplicitMT(threads);
+      Logger::Info(std::format("ROOT ImplicitMT : ON -> {} threads", threads));
+    }
+  }
 
   // Read JSON configuration from file
-  std::ifstream configFile(argv[1]);
+  std::ifstream configFile(cfg_fname);
   if (!configFile.is_open()) {
     std::cerr << "Could not open config file: " << argv[1] << std::endl;
     return 1;
   }
 
-  nlohmann::json config;
-  configFile >> config;
+  nlohmann::json config = nlohmann::json::parse(configFile,
+                                                nullptr, // no parser callback
+                                                true,    // allow exceptions
+                                                true     // allow comments
+  );
   auto theContext = std::make_shared<Context>(MakeContext(config, argc, argv));
   std::unique_ptr<InputProvider> provider = InputProviderRegistry::Instance().Create(config.at("input"));
   ROOT::RDF::RNode df = provider->Get();
@@ -38,7 +69,7 @@ main(int argc, char** argv) {
   for (const auto& sconf : step_configs) {
     steps.emplace_back(step_registry.Create(sconf));
   }
-  for (auto &step: steps) {
+  for (auto& step : steps) {
     df = (*step)(df);
   }
   return 0;

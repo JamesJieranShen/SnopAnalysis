@@ -9,7 +9,7 @@ FileListInputProvider::Configure(const nlohmann::json& config) {
   fTreeName = config.value("tree_name", "output");
   fFileList = config.value("files", std::vector<std::string>{});
   if (fFileList.empty()) {
-    Logger::Warning("FileListInputProvider: No files provided in the configuration.");
+    Logger::Warn("FileListInputProvider: No files provided in the configuration.");
     throw std::runtime_error("FileListInputProvider: No files provided in the configuration.");
   }
 

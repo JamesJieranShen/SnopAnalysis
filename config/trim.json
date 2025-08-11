@@ -1,3 +1,4 @@
+// File timming, similar to what S. Naugle and A. Zummo does
 {
   "input": {
     "type": "file_list",
@@ -7,15 +8,9 @@
     ]
   },
   "steps": [
-    {
-      "type": "snapshot",
-      "tree_name": "output",
-      "file_name": "test_output.ntuple.root"
-    },
-    {
-      "type": "filter",
-      "expr": "fitValid == true"
-    },
+    { "type": "filter", "expr": "fitValid == true" },
+    { "type": "filter", "expr": "energy > 0.6" },
+    { "type": "filter", "expr": "posr_av < 5200" },
     {
       "type": "snapshot",
       "tree_name": "output",
