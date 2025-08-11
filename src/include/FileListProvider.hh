@@ -1,13 +1,14 @@
 #pragma once
 
 #include "InputProvider.hh"
+
 #include <nlohmann/json.hpp>
 
 namespace SnopAnalysis {
-class FileListInputProvider : public InputProvider {
+class FileListProvider : public InputProvider {
 public:
-  void Configure(const nlohmann::json &config) override;
-  ROOT::RDataFrame &Get() override;
+  void Configure(const nlohmann::json& config) override;
+  ROOT::RDataFrame& Get() override;
 
 private:
   std::string fTreeName;

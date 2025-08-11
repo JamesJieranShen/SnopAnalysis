@@ -1,11 +1,11 @@
-#include "FileListInputProvider.hh"
+#include "FileListProvider.hh"
 
 #include "InputProviderRegistry.hh"
 #include "Logger.hh"
 
 namespace SnopAnalysis {
 void
-FileListInputProvider::Configure(const nlohmann::json& config) {
+FileListProvider::Configure(const nlohmann::json& config) {
   fTreeName = config.value("tree_name", "output");
   fFileList = config.value("files", std::vector<std::string>{});
   if (fFileList.empty()) {
@@ -18,9 +18,9 @@ FileListInputProvider::Configure(const nlohmann::json& config) {
 }
 
 ROOT::RDataFrame&
-FileListInputProvider::Get() {
+FileListProvider::Get() {
   return *fDataFrame;
 }
 
-REGISTER_INPUT_PROVIDER("file_list", FileListInputProvider);
+REGISTER_INPUT_PROVIDER("file_list", FileListProvider);
 } // namespace SnopAnalysis
