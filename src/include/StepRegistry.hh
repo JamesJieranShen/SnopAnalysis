@@ -11,7 +11,7 @@
 namespace SnopAnalysis {
 class StepRegistry {
 public:
-  using Creator = std::function<std::unique_ptr<Step>(const nlohmann::json&)>;
+  using Creator = std::function<std::unique_ptr<Step>()>;
   static StepRegistry& Instance() {
     static StepRegistry instance;
     return instance;
@@ -22,9 +22,10 @@ public:
     std::string name = cfg.value("type", "unknown");
     auto it = fRegistry.find(name);
     if (it != fRegistry.end()) {
-      std::unique_ptr<Step> step = it->second(cfg);
+      std::unique_ptr<Step> step = it->second();
       step->SetStepID(fNextStepID++);
       step->SetContext(fContext);
+      step->Configure(cfg);
       Logger::Info(std::format("Creating STEP {}: {} ({})", step->GetStepID(), name, step->GetComment()));
       Logger::Debug(std::format("Step configuration: {}", cfg.dump(2)));
       return step;
@@ -43,9 +44,8 @@ private:
   namespace {                                                                                                          \
   struct Register_##CLASSNAME {                                                                                        \
     Register_##CLASSNAME() {                                                                                           \
-      StepRegistry::Instance().Register(TYPE_STRING, [](const nlohmann::json& cfg) {                                   \
+      StepRegistry::Instance().Register(TYPE_STRING, []() {                                                            \
         auto result = std::make_unique<CLASSNAME>();                                                                   \
-        result->Configure(cfg);                                                                                        \
         return result;                                                                                                 \
       });                                                                                                              \
     }                                                                                                                  \

@@ -41,10 +41,12 @@ main(int argc, char** argv) {
   }
   if (!mt) {
     Logger::Info("Running in single-threaded mode.");
+    threads = 1;
   } else {
     if (!threads) {
       ROOT::EnableImplicitMT();
-      Logger::Info(std::format("ROOT ImplicitMT : ON (auto) -> {} threads", ROOT::GetThreadPoolSize()));
+      threads = ROOT::GetThreadPoolSize();
+      Logger::Info(std::format("ROOT ImplicitMT : ON (auto) -> {} threads", threads));
     } else {
       ROOT::EnableImplicitMT(threads);
       Logger::Info(std::format("ROOT ImplicitMT : ON -> {} threads", threads));
@@ -63,7 +65,9 @@ main(int argc, char** argv) {
                                                 true,    // allow exceptions
                                                 true     // allow comments
   );
-  auto theContext = std::make_shared<Context>(MakeContext(config, argc, argv));
+  std::shared_ptr<Context> theContext = std::make_shared<Context>(MakeContext(config, argc, argv));
+  theContext->mt_threads = threads;
+  theContext->eager = run_eager;
   std::unique_ptr<InputProvider> provider = InputProviderRegistry::Instance().Create(config.at("input"));
   ROOT::RDF::RNode df = provider->Get();
 
@@ -76,7 +80,7 @@ main(int argc, char** argv) {
     steps.emplace_back(step_registry.Create(sconf));
   }
   for (auto& step : steps) {
-    df = (*step)(df, run_eager);
+    df = step->Execute(df);
   }
   std::chrono::time_point end = std::chrono::high_resolution_clock::now();
   Logger::Info(std::format("Analysis completed in {} seconds",

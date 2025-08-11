@@ -16,12 +16,14 @@ struct Context {
   std::string fVersion;
   std::string fCmdLine;
   std::string fStartTime;
+  size_t mt_threads = 1;
+  bool eager = false;
 };
 
 inline void
 to_json(nlohmann::json& j, const Context& c) {
-  j = nlohmann::json{
-      {"config", *c.fConfig}, {"version", c.fVersion}, {"cmdline", c.fCmdLine}, {"startTime", c.fStartTime}};
+  j = nlohmann::json{{"config", *c.fConfig},      {"version", c.fVersion},      {"cmdline", c.fCmdLine},
+                     {"startTime", c.fStartTime}, {"mt_threads", c.mt_threads}, {"eager", c.eager}};
 }
 
 inline Context
