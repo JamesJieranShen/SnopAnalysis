@@ -12,6 +12,7 @@ SnapshotWriter::Configure(const nlohmann::json& config) {
   OutputWriter::Configure(config);
   fTreeName = config.value("tree_name", "output");
   fFileName = config.value("file_name", "output.ntuple.root");
+  fColumnNames = config.value("columns", std::vector<std::string>{});
 }
 
 void
@@ -23,8 +24,16 @@ SnapshotWriter::Write(ROOT::RDF::RNode df) {
   Logger::Info(std::format(std::locale("en_US.UTF-8"), "Creating snapshot in file: {} -- {:L} entries.", fFileName,
                            df.Count().GetValue()));
 
-  // Add branches to the tree based on the dataframe schema
-  df.Snapshot(fTreeName, fFileName);
+  if (fColumnNames.empty())
+    df.Snapshot(fTreeName, fFileName);
+  else {
+    Logger::Info("Writing only selected columns: " + std::accumulate(fColumnNames.begin(), fColumnNames.end(),
+                                                                     std::string(""),
+                                                                     [](const std::string& a, const std::string& b) {
+                                                                       return a + (a.length() > 0 ? ", " : "") + b;
+                                                                     }));
+    df.Snapshot(fTreeName, fFileName, fColumnNames);
+  }
 
   // Close the file
   file->Close();

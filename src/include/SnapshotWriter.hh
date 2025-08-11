@@ -13,5 +13,6 @@ public:
 private:
   std::string fTreeName;
   std::string fFileName;
+  std::vector<std::string> fColumnNames;
 };
 } // namespace SnopAnalysis
