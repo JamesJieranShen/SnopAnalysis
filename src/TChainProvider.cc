@@ -10,20 +10,26 @@ namespace SnopAnalysis {
 void
 TChainProvider::Configure(const nlohmann::json& config) {
   InputProvider::Configure(config);
-  bool run_sort = config.value("sort", false);
   const nlohmann::json& parts = config["parts"];
   for (auto& ff : parts) {
     if (!fChain)
-      fChain = GetChain(ff, run_sort);
-    else
-      fChain->AddFriend(GetChain({ff}, run_sort).get());
+      fChain = GetChain(ff);
+    else {
+      fFriends.emplace_back(GetChain(ff));
+    }
+  }
+  for (const std::unique_ptr<TChain>& ff : fFriends) {
+    if (!fChain->AddFriend(ff.get())) {
+      Logger::Die(std::format("Failed to add friend chain: {}", ff->GetName()));
+    }
   }
 }
 
 std::unique_ptr<TChain>
-TChainProvider::GetChain(const nlohmann::json& cfg, bool run_sort) {
+TChainProvider::GetChain(const nlohmann::json& cfg) {
   std::string tree_name = cfg.value("tree_name", "output");
   std::vector<std::string> filePatterns = cfg["files"].get<std::vector<std::string>>();
+  bool run_sort = cfg.value("sort", false);
   std::unique_ptr<TChain> result = std::make_unique<TChain>(tree_name.c_str());
   for (const std::string& pattern : filePatterns) {
     // create a temporary TChain to get the list of files matching the pattern

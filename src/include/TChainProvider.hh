@@ -13,7 +13,8 @@ public:
 
 private:
   std::unique_ptr<TChain> fChain;
-  std::unique_ptr<TChain> GetChain(const nlohmann::json& cfg, bool run_sort);
+  std::vector<std::unique_ptr<TChain>> fFriends;
+  std::unique_ptr<TChain> GetChain(const nlohmann::json& cfg);
 };
 
 } // namespace SnopAnalysis
