@@ -22,14 +22,20 @@ public:
   virtual void Configure(const nlohmann::json& config) {
     fComment = config.value("comment", "");
     fEager = config.value("eager", fContext->eager);
+    fSequentialOnly = config.value("sequential_only", false);
   }
   ROOT::RDF::RNode Execute(ROOT::RDF::RNode input) {
+    if (fSequentialOnly && ROOT::IsImplicitMTEnabled()) {
+      Logger::Die("This step is configured to run sequentially, but implicit multithreading is enabled. "
+                  "Please disable implicit multithreading or set 'sequential_only' to false in the configuration.");
+    }
     if (fEager) {
       Logger::Debug(
           std::format("Eagerly executing STEP {}: {} ({})", fStepID, demangle(typeid(*this).name()), fComment));
       ROOT::RDF::RNode output = DoExecute(input);
-      Logger::Info(std::format(std::locale("en_US.UTF-8"), "Finished STEP {}: {} ({}). Dataframe now has {:L} entries",
-                               fStepID, demangle(typeid(*this).name()), fComment, output.Count().GetValue()));
+      Logger::Info(std::format(std::locale("en_US.UTF-8"),
+                               "Finished EAGER STEP {}: {} ({}). Dataframe now has {:L} entries", fStepID,
+                               demangle(typeid(*this).name()), fComment, output.Count().GetValue()));
       return output;
     } else {
       return DoExecute(input);
@@ -48,6 +54,7 @@ protected:
   size_t fStepID = static_cast<size_t>(-1); // default invalid
   std::string fComment;
   bool fEager;
+  bool fSequentialOnly = false;
   std::shared_ptr<const Context> fContext;
 };
 
