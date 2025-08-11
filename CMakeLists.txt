@@ -20,10 +20,20 @@ if(GIT_FOUND)
     OUTPUT_STRIP_TRAILING_WHITESPACE
   )
 endif()
+include(FetchContent)
 
 project(SnopAnalysis LANGUAGES CXX)
 
+# ROOT
 find_package(ROOT REQUIRED COMPONENTS RIO Tree Hist Core ROOTDataFrame)
+
+# nlohmann json
+fetchcontent_declare(
+    json
+    GIT_REPOSITORY https://github.com/nlohmann/json.git
+    GIT_TAG        v3.12.0
+)
+fetchcontent_makeavailable(json)
 
 configure_file(
   "${CMAKE_SOURCE_DIR}/cmake/Config.hh.in"
