@@ -2,18 +2,18 @@
 
 #include "InputProvider.hh"
 
+#include <TChain.h>
 #include <nlohmann/json.hpp>
 
 namespace SnopAnalysis {
-class FileListProvider : public InputProvider {
+class WildcardProvider : public InputProvider {
 public:
   void Configure(const nlohmann::json& config) override;
   ROOT::RDataFrame Get() override;
 
 private:
   std::string fTreeName;
-  std::vector<std::string> fFileList;
-  std::unique_ptr<ROOT::RDataFrame> fDataFrame;
+  std::unique_ptr<TChain> fChain;
 };
 
 } // namespace SnopAnalysis

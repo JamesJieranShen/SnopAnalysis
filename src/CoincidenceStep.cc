@@ -3,6 +3,7 @@
 namespace SnopAnalysis {
 void
 CoincidenceStep::Configure(const nlohmann::json& config) {
+  Step::Configure(config);
   fWindow = config["window"];
   fPromptTagName = config["prompt_tag_name"];
   fDelayedTagName = config["delayed_tag_name"];
@@ -20,6 +21,7 @@ CoincidenceStep::DoExecute(ROOT::RDF::RNode input) {
   std::vector<double> promptTimes = result.Filter(fPromptExpr).Take<double>(fTimeColumn).GetValue();
   std::sort(promptTimes.begin(), promptTimes.end());
   result = result.Define(fPromptTagName, fPromptExpr);
+  // TODO: Add ability to cut on delta_r
   auto delayedLambda = [pts = std::make_shared<std::vector<double>>(std::move(promptTimes)), lookAhead = (fWindow < 0),
                         window = std::abs(fWindow)](double tt, bool isDelayCandidate) -> bool {
     if (!isDelayCandidate) return false;

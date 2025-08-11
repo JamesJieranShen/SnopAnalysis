@@ -14,11 +14,11 @@ FileListProvider::Configure(const nlohmann::json& config) {
   }
 
   fDataFrame = std::make_unique<ROOT::RDataFrame>(fTreeName, fFileList);
-  Logger::Info(std::format("FileListInputProvider initialized with {} entries.", fDataFrame->Count().GetValue()));
 }
 
-ROOT::RDataFrame&
+ROOT::RDataFrame
 FileListProvider::Get() {
+  Logger::Debug(std::format("FileInputProvider created dataframe with {:L} entries.", fDataFrame->Count().GetValue()));
   return *fDataFrame;
 }
 

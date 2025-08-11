@@ -6,6 +6,7 @@ namespace SnopAnalysis {
 
 void
 DefineStep::Configure(const nlohmann::json& config) {
+  Step::Configure(config);
   fName = config.at("name").get<std::string>();
   fExpression = config.at("expr").get<std::string>();
 }

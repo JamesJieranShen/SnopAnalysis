@@ -4,6 +4,7 @@
 #include "StepRegistry.hh"
 
 #include <CLI/CLI.hpp>
+#include <chrono>
 #include <fstream>
 #include <iostream>
 #include <nlohmann/json.hpp>
@@ -26,9 +27,14 @@ main(int argc, char** argv) {
   parser.add_option("-j,--jobs,--threads", threads, "Number of threads to use")
       ->check(CLI::Range(1, 1024)); // NOTE: buy a new CPU immediately when this is updated.
 
+  bool run_eager = false;
+  parser.add_flag("--eager", run_eager, "Run steps eagerly (default: false)")->default_val(false);
+
   CLI11_PARSE(parser, argc, argv);
 
   Logger::SetLevel(verbosity);
+
+  std::chrono::time_point start = std::chrono::high_resolution_clock::now();
 
   if (!mt && threads > 1) {
     Logger::Warn("Number of threads specified but multithreading not enabled. Ignoring thread count.");
@@ -70,7 +76,10 @@ main(int argc, char** argv) {
     steps.emplace_back(step_registry.Create(sconf));
   }
   for (auto& step : steps) {
-    df = (*step)(df);
+    df = (*step)(df, run_eager);
   }
+  std::chrono::time_point end = std::chrono::high_resolution_clock::now();
+  Logger::Info(std::format("Analysis completed in {} seconds",
+                           std::chrono::duration_cast<std::chrono::seconds>(end - start).count()));
   return 0;
 }

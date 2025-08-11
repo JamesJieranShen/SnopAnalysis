@@ -25,7 +25,7 @@ public:
       std::unique_ptr<Step> step = it->second(cfg);
       step->SetStepID(fNextStepID++);
       step->SetContext(fContext);
-      Logger::Info(std::format("Creating STEP {}: {}", step->GetStepID(), name));
+      Logger::Info(std::format("Creating STEP {}: {} ({})", step->GetStepID(), name, step->GetComment()));
       Logger::Debug(std::format("Step configuration: {}", cfg.dump(2)));
       return step;
     }

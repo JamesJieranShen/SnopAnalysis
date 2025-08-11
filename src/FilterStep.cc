@@ -6,6 +6,7 @@ namespace SnopAnalysis {
 
 void
 FilterStep::Configure(const nlohmann::json& config) {
+  Step::Configure(config);
   fExpression = config.at("expr").get<std::string>();
   fName = config.value("name", "");
 }
