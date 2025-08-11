@@ -1,11 +1,12 @@
 #include "FileListProvider.hh"
 
-#include "InputProviderRegistry.hh"
 #include "Logger.hh"
+#include "StepRegistry.hh"
 
 namespace SnopAnalysis {
 void
 FileListProvider::Configure(const nlohmann::json& config) {
+  InputProvider::Configure(config);
   fTreeName = config.value("tree_name", "output");
   fFileList = config.value("files", std::vector<std::string>{});
   if (fFileList.empty()) {

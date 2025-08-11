@@ -1,5 +1,4 @@
 #include "Context.hh"
-#include "InputProviderRegistry.hh"
 #include "Logger.hh"
 #include "StepRegistry.hh"
 
@@ -68,11 +67,11 @@ main(int argc, char** argv) {
   std::shared_ptr<Context> theContext = std::make_shared<Context>(MakeContext(config, argc, argv));
   theContext->mt_threads = threads;
   theContext->eager = run_eager;
-  std::unique_ptr<InputProvider> provider = InputProviderRegistry::Instance().Create(config.at("input"));
-  ROOT::RDF::RNode df = provider->Get();
 
   StepRegistry& step_registry = StepRegistry::Instance();
   StepRegistry::Instance().SetContext(theContext);
+
+  ROOT::RDF::RNode df = ROOT::RDataFrame(0);
   nlohmann::json step_configs = config.at("steps");
   Logger::Info(std::format("Found {} steps in configuration", step_configs.size()));
   std::vector<std::unique_ptr<Step>> steps;

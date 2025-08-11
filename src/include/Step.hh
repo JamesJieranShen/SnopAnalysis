@@ -19,9 +19,12 @@ namespace SnopAnalysis {
 class Step {
 public:
   virtual ~Step() = default;
-  virtual void Configure(const nlohmann::json& config) { fComment = config.value("comment", ""); }
+  virtual void Configure(const nlohmann::json& config) {
+    fComment = config.value("comment", "");
+    fEager = config.value("eager", fContext->eager);
+  }
   ROOT::RDF::RNode Execute(ROOT::RDF::RNode input) {
-    if (fContext->eager) {
+    if (fEager) {
       Logger::Debug(
           std::format("Eagerly executing STEP {}: {} ({})", fStepID, demangle(typeid(*this).name()), fComment));
       ROOT::RDF::RNode output = DoExecute(input);
@@ -44,6 +47,7 @@ protected:
   virtual ROOT::RDF::RNode DoExecute(ROOT::RDF::RNode input) = 0;
   size_t fStepID = static_cast<size_t>(-1); // default invalid
   std::string fComment;
+  bool fEager;
   std::shared_ptr<const Context> fContext;
 };
 

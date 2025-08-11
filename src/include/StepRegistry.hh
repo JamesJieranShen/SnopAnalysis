@@ -26,7 +26,7 @@ public:
       step->SetStepID(fNextStepID++);
       step->SetContext(fContext);
       step->Configure(cfg);
-      Logger::Info(std::format("Creating STEP {}: {} ({})", step->GetStepID(), name, step->GetComment()));
+      Logger::Info(std::format("Created STEP {}: {} ({})", step->GetStepID(), name, step->GetComment()));
       Logger::Debug(std::format("Step configuration: {}", cfg.dump(2)));
       return step;
     }
@@ -52,3 +52,5 @@ private:
   };                                                                                                                   \
   static Register_##CLASSNAME reg_instance_##CLASSNAME;                                                                \
   }
+
+#define REGISTER_INPUT_PROVIDER(TYPE_STRING, CLASSNAME) REGISTER_STEP(TYPE_STRING "_provider", CLASSNAME)

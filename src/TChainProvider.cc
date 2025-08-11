@@ -1,22 +1,33 @@
-#include "WildcardProvider.hh"
+#include "TChainProvider.hh"
 
-#include "InputProviderRegistry.hh"
 #include "Logger.hh"
+#include "StepRegistry.hh"
 
 #include <TChainElement.h>
 #include <locale>
 
 namespace SnopAnalysis {
 void
-WildcardProvider::Configure(const nlohmann::json& config) {
-  fTreeName = config.value("tree_name", "output");
-  std::vector<std::string> filePatterns = config["patterns"].get<std::vector<std::string>>();
-  fChain = std::make_unique<TChain>(fTreeName.c_str());
-
+TChainProvider::Configure(const nlohmann::json& config) {
+  InputProvider::Configure(config);
   bool run_sort = config.value("sort", false);
+  const nlohmann::json& parts = config["parts"];
+  for (auto& ff : parts) {
+    if (!fChain)
+      fChain = GetChain(ff, run_sort);
+    else
+      fChain->AddFriend(GetChain({ff}, run_sort).get());
+  }
+}
+
+std::unique_ptr<TChain>
+TChainProvider::GetChain(const nlohmann::json& cfg, bool run_sort) {
+  std::string tree_name = cfg.value("tree_name", "output");
+  std::vector<std::string> filePatterns = cfg["files"].get<std::vector<std::string>>();
+  std::unique_ptr<TChain> result = std::make_unique<TChain>(tree_name.c_str());
   for (const std::string& pattern : filePatterns) {
     // create a temporary TChain to get the list of files matching the pattern
-    TChain tempChain(fTreeName.c_str());
+    TChain tempChain(tree_name.c_str());
     tempChain.Add(pattern.c_str());
 
     // pull filenames out of the temp chain, sort them, and add them to the main chain.
@@ -34,7 +45,7 @@ WildcardProvider::Configure(const nlohmann::json& config) {
     if (run_sort) std::sort(filelist.begin(), filelist.end());
     for (const std::string& file : filelist) {
       Logger::Trace(std::format("Adding file: {}", file));
-      fChain->Add(file.c_str());
+      result->Add(file.c_str());
     }
     if (filelist.empty()) {
       Logger::Warn(std::format("No files matched the pattern: {}", pattern));
@@ -47,14 +58,15 @@ WildcardProvider::Configure(const nlohmann::json& config) {
       }
     }
   }
+  return result;
 }
 
 ROOT::RDataFrame
-WildcardProvider::Get() {
+TChainProvider::Get() {
   ROOT::RDataFrame df(*fChain);
   Logger::Info(std::format(std::locale("en_US.UTF-8"), "Created RDataFrame with {:L} entries.", df.Count().GetValue()));
   return df;
 }
 
-REGISTER_INPUT_PROVIDER("wildcard", WildcardProvider);
+REGISTER_INPUT_PROVIDER("tchain", TChainProvider);
 } // namespace SnopAnalysis
