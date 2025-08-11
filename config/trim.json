@@ -7,19 +7,48 @@
   //     "/nfs/disk1/snoplus/bismsb/Analysis15_802_Bronze_364311_368447_Apr2025/Analysis15_r0000366261_s001_p005.ntuple.root"
   //   ]
   // },
-  "input": {
-    "type": "wildcard",
-    "patterns": ["/nfs/disk1/snoplus/bismsb/Analysis15_bMR_801_802_Bronze_358080_364310_Apr2025/*.ntuple.root"],
-    "sort": true
-  },
   "steps": [
-    { "type": "filter", "expr": "fitValid == true", "comment": "fitValid" },
-    { "type": "filter", "expr": "energy > 0.6", "comment": "energy > 0.6MeV" },
-    { "type": "filter", "expr": "posr_av < 5200", "comment": "fiducial volume R < 5.2m" },
+    { "type": "reset", "multithreading": false, "comment": "prepare for sequential delta_t calculation" },
+    {
+      "type": "tchain_provider",
+      "parts": [
+        {
+          "tree_name": "output",
+          "files": ["/nfs/disk1/snoplus/bismsb/Analysis15_bMR_801_802_Bronze_358080_364310_Apr2025/*.ntuple.root"]
+        }
+      ],
+      "sort": true
+    },
+    { "type": "delta_t", "name": "delta_t", "comment": "adjacent event delta_t for retrigger calculation" },
     {
       "type": "snapshot",
       "tree_name": "output",
-      "file_name": "trimmed_Analysis15_bMR_801_802_Bronze_358080_364310_Apr2025.ntuple.root"
+      "columns": ["delta_t"],
+      "file_name": "delta_t.ntuple.root"
+    },
+    { "type": "reset", "multithreading": true, "comment": "re-enable multithreading" },
+    {
+      "type": "tchain_provider",
+      "parts": [
+        {
+          "tree_name": "output",
+          "files": ["/nfs/disk1/snoplus/bismsb/Analysis15_bMR_801_802_Bronze_358080_364310_Apr2025/*.ntuple.root"],
+          "sort": true
+        },
+        {
+          "tree_name": "output",
+          "files": ["delta_t.ntuple.root"]
+        }
+      ]
+    },
+    { "type": "filter", "expr": "fitValid == true", "comment": "fitValid" },
+    { "type": "filter", "expr": "energy > 0.6", "comment": "energy > 0.6MeV" },
+    { "type": "filter", "expr": "posr_av < 5200", "comment": "fiducial volume R < 5.2m" },
+    { "type": "filter", "expr": "delta_t != 460", "comment": "Remove retriggers" },
+    {
+      "type": "snapshot",
+      "tree_name": "output",
+      "file_name": "/nfs/disk1/users/jierans/snoplus/trim_test.ntuple.root"
     }
   ]
 }
