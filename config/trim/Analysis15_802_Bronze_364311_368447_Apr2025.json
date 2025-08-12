@@ -1,12 +1,5 @@
 // File timming, similar to what S. Naugle and A. Zummo does
 {
-  // "input": {
-  //   "type": "file_list",
-  //   "files": [
-  //     "/nfs/disk1/snoplus/bismsb/Analysis15_802_Bronze_364311_368447_Apr2025/Analysis15_r0000366261_s000_p005.ntuple.root",
-  //     "/nfs/disk1/snoplus/bismsb/Analysis15_802_Bronze_364311_368447_Apr2025/Analysis15_r0000366261_s001_p005.ntuple.root"
-  //   ]
-  // },
   "steps": [
     { "type": "reset", "multithreading": false, "comment": "prepare for sequential delta_t calculation" },
     {
@@ -14,7 +7,7 @@
       "parts": [
         {
           "tree_name": "output",
-          "files": ["/nfs/disk1/snoplus/bismsb/Analysis15_bMR_801_802_Bronze_358080_364310_Apr2025/*.ntuple.root"]
+          "files": ["/nfs/disk1/snoplus/bismsb/Analysis15_802_Bronze_364311_368447_Apr2025/*.ntuple.root"]
         }
       ],
       "sort": true
@@ -24,7 +17,7 @@
       "type": "snapshot",
       "tree_name": "output",
       "columns": ["delta_t"],
-      "file_name": "delta_t.ntuple.root"
+      "file_name": "/nfs/disk1/users/jierans/snoplus/bismsb_roi/cache/deltat_Analysis15_802_Bronze_364311_368447_Apr2025.ntuple.root"
     },
     { "type": "reset", "multithreading": true, "comment": "re-enable multithreading" },
     {
@@ -32,12 +25,14 @@
       "parts": [
         {
           "tree_name": "output",
-          "files": ["/nfs/disk1/snoplus/bismsb/Analysis15_bMR_801_802_Bronze_358080_364310_Apr2025/*.ntuple.root"],
+          "files": ["/nfs/disk1/snoplus/bismsb/Analysis15_802_Bronze_364311_368447_Apr2025/*.ntuple.root"],
           "sort": true
         },
         {
           "tree_name": "output",
-          "files": ["delta_t.ntuple.root"]
+          "files": [
+            "/nfs/disk1/users/jierans/snoplus/bismsb_roi/cache/deltat_Analysis15_802_Bronze_364311_368447_Apr2025.ntuple.root"
+          ]
         }
       ]
     },
@@ -48,7 +43,7 @@
     {
       "type": "snapshot",
       "tree_name": "output",
-      "file_name": "/nfs/disk1/users/jierans/snoplus/trim_test.ntuple.root"
+      "file_name": "/nfs/disk1/users/jierans/snoplus/bismsb_roi/trimmed_files/Analysis15_Bronze_364311_368447_trimmed.ntuple.root"
     }
   ]
 }
