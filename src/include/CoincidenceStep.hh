@@ -8,10 +8,12 @@ public:
   ROOT::RDF::RNode DoExecute(ROOT::RDF::RNode input) override;
 
 private:
-  double fWindow;
+  double fTimeWindow;
+  double fDeltaRWindow;
   std::string fPromptTagName, fDelayedTagName;
   std::string fPromptExpr, fDelayedExpr;
   std::string fTimeColumn;
+  std::array<std::string, 3> fPosColumns;
 };
 
 } // namespace SnopAnalysis
