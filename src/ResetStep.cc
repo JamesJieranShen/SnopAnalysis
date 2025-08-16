@@ -8,8 +8,10 @@ void
 ResetStep::Configure(const nlohmann::json& config) {
   Step::Configure(config);
   fPreserveMT = true;
-  if (config.contains("multithreading")) fPreserveMT = false;
-  fMTOn = config["multithreading"].get<bool>();
+  if (config.contains("multithreading")) {
+    fPreserveMT = false;
+    fMTOn = config["multithreading"];
+  }
 }
 
 ROOT::RDF::RNode
