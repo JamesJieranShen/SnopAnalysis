@@ -14,7 +14,7 @@ SnapshotWriter::Configure(const nlohmann::json& config) {
   fFileName = config.value("file_name", "output.ntuple.root");
   fColumnNames = config.value("columns", std::vector<std::string>{});
   fOpts.fAutoFlush = config.value("autoflush", 0);
-  fOpts.fLazy = config.value("lazy", false);
+  fOpts.fLazy = config.value("lazy", true);
   fOpts.fCompressionLevel = config.value("compression_level", 1);
   fOpts.fMode = config.value("creation_mode", "RECREATE");
   fOpts.fOverwriteIfExists = config.value("overwrite_if_exists", false);
