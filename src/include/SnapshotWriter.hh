@@ -14,5 +14,6 @@ private:
   std::string fTreeName;
   std::string fFileName;
   std::vector<std::string> fColumnNames;
+  ROOT::RDF::RSnapshotOptions fOpts;
 };
 } // namespace SnopAnalysis
