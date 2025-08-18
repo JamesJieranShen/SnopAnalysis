@@ -20,7 +20,7 @@ TChainProvider::Configure(const nlohmann::json& config) {
   }
   for (const std::unique_ptr<TChain>& ff : fFriends) {
     if (!fChain->AddFriend(ff.get())) {
-      Logger::Die(std::format("Failed to add friend chain: {}", ff->GetName()));
+      Logger::Die("Failed to add friend chain: {}", ff->GetName());
     }
   }
 }
@@ -40,7 +40,7 @@ TChainProvider::GetChain(const nlohmann::json& cfg) {
     std::vector<std::string> filelist;
     TObjArray* lst = tempChain.GetListOfFiles();
     if (!lst) {
-      Logger::Die(std::format("List of files from patten {} is somehow null. Something is very wrong.", pattern));
+      Logger::Die("List of files from patten {} is somehow null. Something is very wrong.", pattern);
     }
     filelist.reserve(lst->GetEntries());
     for (int i = 0; i < lst->GetEntries(); ++i) {
@@ -50,17 +50,16 @@ TChainProvider::GetChain(const nlohmann::json& cfg) {
     }
     if (run_sort) std::sort(filelist.begin(), filelist.end());
     for (const std::string& file : filelist) {
-      Logger::Trace(std::format("Adding file: {}", file));
+      Logger::Trace("Adding file: {}", file);
       result->Add(file.c_str());
     }
     if (filelist.empty()) {
-      Logger::Warn(std::format("No files matched the pattern: {}", pattern));
+      Logger::Warn("No files matched the pattern: {}", pattern);
     } else {
       if (run_sort) {
-        Logger::Info(
-            std::format("Added {} files from pattern after lexicographical sorting: {}", filelist.size(), pattern));
+        Logger::Info("Added {} files from pattern after lexicographical sorting: {}", filelist.size(), pattern);
       } else {
-        Logger::Info(std::format("Added {} files from pattern: {}", filelist.size(), pattern));
+        Logger::Info("Added {} files from pattern: {}", filelist.size(), pattern);
       }
     }
   }

@@ -29,11 +29,10 @@ public:
                   "Please disable implicit multithreading or set 'sequential_only' to false in the configuration.");
     }
     return DoExecute(input);
-    Logger::Info(std::format(std::locale("en_US.UTF-8"), "Scheduled STEP {}: {} ({}).", fStepID,
-                             demangle(typeid(*this).name()), fComment));
+    Logger::Info("Scheduled STEP {}: {} ({}).", fStepID, demangle(typeid(*this).name()), fComment);
   }
   void Report() {
-    Logger::Debug(std::format("Reporting step {}: {} ({}).", fStepID, demangle(typeid(*this).name()), fComment));
+    Logger::Debug("Reporting step {}: {} ({}).", fStepID, demangle(typeid(*this).name()), fComment);
     DoReport();
   }
 

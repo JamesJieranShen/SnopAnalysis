@@ -26,8 +26,8 @@ public:
       step->SetStepID(fNextStepID++);
       step->SetContext(fContext);
       step->Configure(cfg);
-      Logger::Info(std::format("Created STEP {}: {} ({})", step->GetStepID(), name, step->GetComment()));
-      Logger::Debug(std::format("Step configuration: {}", cfg.dump(2)));
+      Logger::Info("Created STEP {}: {} ({})", step->GetStepID(), name, step->GetComment());
+      Logger::Debug("Step configuration: {}", cfg.dump(2));
       return step;
     }
     throw std::runtime_error("Step not found: " + name);

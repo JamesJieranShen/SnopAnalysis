@@ -20,13 +20,13 @@ ResetStep::DoExecute([[maybe_unused]] ROOT::RDF::RNode input) {
     if (fMTOn) {
       if (fContext->mt_threads > 1) {
         ROOT::EnableImplicitMT(fContext->mt_threads);
-        Logger::Info(std::format("Multithreading enabled by Step {} with {} threads", fStepID, fContext->mt_threads));
+        Logger::Info("Multithreading enabled by Step {} with {} threads", fStepID, fContext->mt_threads);
       } else {
-        Logger::Info(std::format("Multithreading requested by Step {} but multithreading has been disabled.", fStepID));
+        Logger::Info("Multithreading requested by Step {} but multithreading has been disabled.", fStepID);
       }
     } else {
       ROOT::DisableImplicitMT();
-      Logger::Info(std::format("Multithreading disabled by Step {}", fStepID));
+      Logger::Info("Multithreading disabled by Step {}", fStepID);
     }
   }
   return ROOT::RDataFrame(0);

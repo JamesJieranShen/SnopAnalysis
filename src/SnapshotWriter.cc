@@ -38,7 +38,7 @@ SnapshotWriter::Write(ROOT::RDF::RNode df) {
   if (!file || file->IsZombie()) {
     throw std::runtime_error("Failed to open output file: " + fFileName);
   }
-  Logger::Info(std::format("Creating snapshot in file: {}", fFileName));
+  Logger::Info("Creating snapshot in file: {}", fFileName);
 
   if (fColumnNames.empty())
     df.Snapshot(fTreeName, fFileName, "", fOpts);

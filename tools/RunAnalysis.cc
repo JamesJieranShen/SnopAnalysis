@@ -42,10 +42,10 @@ main(int argc, char** argv) {
     if (!threads) {
       ROOT::EnableImplicitMT();
       threads = ROOT::GetThreadPoolSize();
-      Logger::Info(std::format("ROOT ImplicitMT : ON (auto) -> {} threads", threads));
+      Logger::Info("ROOT ImplicitMT : ON (auto) -> {} threads", threads);
     } else {
       ROOT::EnableImplicitMT(threads);
-      Logger::Info(std::format("ROOT ImplicitMT : ON -> {} threads", threads));
+      Logger::Info("ROOT ImplicitMT : ON -> {} threads", threads);
     }
   }
 
@@ -69,7 +69,7 @@ main(int argc, char** argv) {
 
   ROOT::RDF::RNode df = ROOT::RDataFrame(0);
   nlohmann::json step_configs = config.at("steps");
-  Logger::Info(std::format("Found {} steps in configuration", step_configs.size()));
+  Logger::Info("Found {} steps in configuration", step_configs.size());
   std::vector<std::unique_ptr<Step>> steps;
   for (const auto& sconf : step_configs) {
     steps.emplace_back(step_registry.Create(sconf));
@@ -81,9 +81,9 @@ main(int argc, char** argv) {
     step->Report();
   }
 
-  Logger::Info(std::format("Computation graph executed for {} times.", df.GetNRuns()));
+  Logger::Info("Computation graph executed for {} times.", df.GetNRuns());
   std::chrono::time_point end = std::chrono::high_resolution_clock::now();
-  Logger::Info(std::format("Analysis completed in {} seconds",
-                           std::chrono::duration_cast<std::chrono::seconds>(end - start).count()));
+  Logger::Info("Analysis completed in {} seconds",
+               std::chrono::duration_cast<std::chrono::seconds>(end - start).count());
   return 0;
 }

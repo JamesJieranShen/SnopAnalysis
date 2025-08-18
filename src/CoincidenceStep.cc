@@ -59,11 +59,10 @@ CoincidenceStep::DoExecute(ROOT::RDF::RNode input) {
       }
     }
   }
-  Logger::Debug(std::format("Found {} prompt candidates and {} delayed candidates", prompt_indices.size(),
-                            delayed_indices.size()));
-  Logger::Debug(std::format("Coincidence step took {} ms", std::chrono::duration_cast<std::chrono::milliseconds>(
-                                                               std::chrono::high_resolution_clock::now() - start)
-                                                               .count()));
+  Logger::Debug("Found {} prompt candidates and {} delayed candidates", prompt_indices.size(), delayed_indices.size());
+  Logger::Debug(
+      "Coincidence step took {} ms",
+      std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::high_resolution_clock::now() - start).count());
   sort(prompt_indices.begin(), prompt_indices.end());
   sort(delayed_indices.begin(), delayed_indices.end());
   // NOTE: may be faster to use a unordered_set
