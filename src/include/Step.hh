@@ -32,6 +32,10 @@ public:
     Logger::Info(std::format(std::locale("en_US.UTF-8"), "Scheduled STEP {}: {} ({}).", fStepID,
                              demangle(typeid(*this).name()), fComment));
   }
+  void Report() {
+    Logger::Debug(std::format("Reporting step {}: {} ({}).", fStepID, demangle(typeid(*this).name()), fComment));
+    DoReport();
+  }
 
   void SetStepID(size_t stepID) { fStepID = stepID; }
   size_t GetStepID() const { return fStepID; }
@@ -42,6 +46,7 @@ public:
 
 protected:
   virtual ROOT::RDF::RNode DoExecute(ROOT::RDF::RNode input) = 0;
+  virtual void DoReport(){};
   size_t fStepID = static_cast<size_t>(-1); // default invalid
   std::string fComment;
   bool fSequentialOnly = false;

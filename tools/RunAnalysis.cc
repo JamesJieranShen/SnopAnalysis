@@ -77,6 +77,10 @@ main(int argc, char** argv) {
   for (auto& step : steps) {
     df = step->Execute(df);
   }
+  for (auto& step : steps) {
+    step->Report();
+  }
+
   Logger::Info(std::format("Computation graph executed for {} times.", df.GetNRuns()));
   std::chrono::time_point end = std::chrono::high_resolution_clock::now();
   Logger::Info(std::format("Analysis completed in {} seconds",
