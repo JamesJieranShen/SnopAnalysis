@@ -21,7 +21,6 @@ public:
   virtual ~Step() = default;
   virtual void Configure(const nlohmann::json& config) {
     fComment = config.value("comment", "");
-    fEager = config.value("eager", fContext->eager);
     fSequentialOnly = config.value("sequential_only", false);
   }
   ROOT::RDF::RNode Execute(ROOT::RDF::RNode input) {
@@ -29,19 +28,9 @@ public:
       Logger::Die("This step is configured to run sequentially, but implicit multithreading is enabled. "
                   "Please disable implicit multithreading or set 'sequential_only' to false in the configuration.");
     }
-    if (fEager) {
-      Logger::Debug(
-          std::format("Eagerly executing STEP {}: {} ({})", fStepID, demangle(typeid(*this).name()), fComment));
-      ROOT::RDF::RNode output = DoExecute(input);
-      Logger::Info(std::format(std::locale("en_US.UTF-8"),
-                               "Finished EAGER STEP {}: {} ({}). Dataframe now has {:L} entries", fStepID,
-                               demangle(typeid(*this).name()), fComment, output.Count().GetValue()));
-      return output;
-    } else {
-      return DoExecute(input);
-      Logger::Info(std::format(std::locale("en_US.UTF-8"), "Scheduled STEP {}: {} ({}).", fStepID,
-                               demangle(typeid(*this).name()), fComment));
-    }
+    return DoExecute(input);
+    Logger::Info(std::format(std::locale("en_US.UTF-8"), "Scheduled STEP {}: {} ({}).", fStepID,
+                             demangle(typeid(*this).name()), fComment));
   }
 
   void SetStepID(size_t stepID) { fStepID = stepID; }
@@ -55,7 +44,6 @@ protected:
   virtual ROOT::RDF::RNode DoExecute(ROOT::RDF::RNode input) = 0;
   size_t fStepID = static_cast<size_t>(-1); // default invalid
   std::string fComment;
-  bool fEager;
   bool fSequentialOnly = false;
   std::shared_ptr<const Context> fContext;
 };

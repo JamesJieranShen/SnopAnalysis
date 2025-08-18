@@ -7,11 +7,7 @@
 namespace SnopAnalysis {
 class InputProvider : public Step {
 public:
-  virtual void Configure(const nlohmann::json& config) override {
-    Step::Configure(config);
-    // always run a input provider eagerly
-    fEager = true;
-  }
+  virtual void Configure(const nlohmann::json& config) override { Step::Configure(config); }
   virtual ROOT::RDF::RNode DoExecute(ROOT::RDF::RNode input) override {
     if (input.Count().GetValue() > 0) {
       Logger::Info("InputProvider called on non-empty dataframe. Previous data is now discarded.");

@@ -26,9 +26,6 @@ main(int argc, char** argv) {
   parser.add_option("-j,--jobs,--threads", threads, "Number of threads to use")
       ->check(CLI::Range(1, 1024)); // NOTE: buy a new CPU immediately when this is updated.
 
-  bool run_eager = false;
-  parser.add_flag("--eager", run_eager, "Run steps eagerly (default: false)")->default_val(false);
-
   CLI11_PARSE(parser, argc, argv);
 
   Logger::SetLevel(verbosity);
@@ -66,7 +63,6 @@ main(int argc, char** argv) {
   );
   std::shared_ptr<Context> theContext = std::make_shared<Context>(MakeContext(config, argc, argv));
   theContext->mt_threads = threads;
-  theContext->eager = run_eager;
 
   StepRegistry& step_registry = StepRegistry::Instance();
   StepRegistry::Instance().SetContext(theContext);

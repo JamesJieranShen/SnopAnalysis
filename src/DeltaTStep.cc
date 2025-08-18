@@ -1,6 +1,7 @@
 #include "DeltaTStep.hh"
 
 #include "StepRegistry.hh"
+#include "util.hh"
 
 namespace SnopAnalysis {
 
@@ -22,7 +23,7 @@ DeltaTStep::DoExecute(ROOT::RDF::RNode input) {
                           *prevValid = true;
                           return 0ULL;
                         }
-                        const ULong64_t delta = ((clockCount50 - *prev) & constants::kROLLOVER50) * 20u;
+                        const ULong64_t delta = DeltaT_Clock50(*prev, clockCount50);
                         *prev = clockCount50;
                         return delta;
                       },
