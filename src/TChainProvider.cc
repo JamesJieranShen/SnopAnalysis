@@ -70,7 +70,6 @@ TChainProvider::GetChain(const nlohmann::json& cfg) {
 ROOT::RDataFrame
 TChainProvider::Get() {
   ROOT::RDataFrame df(*fChain);
-  Logger::Info(std::format(std::locale("en_US.UTF-8"), "Created RDataFrame with {:L} entries.", df.Count().GetValue()));
   return df;
 }
 

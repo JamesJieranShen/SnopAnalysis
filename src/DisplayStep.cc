@@ -11,9 +11,9 @@ DisplayStep::Configure(const nlohmann::json& config) {
 
 ROOT::RDF::RNode
 DisplayStep::DoExecute(ROOT::RDF::RNode input) {
-  for (auto& col : input.GetColumnNames()) {
-    std::cout << col << " : " << input.GetColumnType(col) << "\n";
-  }
+  std::cout << "================================================================================" << std::endl;
+  input.Describe().Print();
+  std::cout << "================================================================================" << std::endl;
   return input;
 }
 

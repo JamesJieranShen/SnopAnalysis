@@ -19,7 +19,6 @@ FileListProvider::Configure(const nlohmann::json& config) {
 
 ROOT::RDataFrame
 FileListProvider::Get() {
-  Logger::Debug(std::format("FileInputProvider created dataframe with {:L} entries.", fDataFrame->Count().GetValue()));
   return *fDataFrame;
 }
 
