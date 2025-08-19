@@ -4,6 +4,7 @@
 #include "StepRegistry.hh"
 #include "TObjString.h"
 
+#include <CLI/CLI.hpp>
 #include <locale>
 
 namespace SnopAnalysis {
@@ -11,10 +12,18 @@ void
 SnapshotWriter::Configure(const nlohmann::json& config) {
   OutputWriter::Configure(config);
   fTreeName = config.value("tree_name", "output");
-  fFileName = config.value("file_name", "output.ntuple.root");
+  fFileName = config.value("file_name", "");
+  if (fFileName == "") {
+    Logger::Info("No file name provided, using attempting to read command line.");
+    CLI::App app{"run_number_parser"};
+    app.add_option("-o,--output", fFileName, "output filename");
+    app.allow_extras();
+    app.parse(GetContext()->fCmdLine);
+    Logger::Info("Using output file name: {}", fFileName);
+  }
   fColumnNames = config.value("columns", std::vector<std::string>{});
   fOpts.fAutoFlush = config.value("autoflush", 0);
-  fOpts.fLazy = config.value("lazy", true);
+  fOpts.fLazy = config.value("lazy", false);
   fOpts.fCompressionLevel = config.value("compression_level", 1);
   fOpts.fMode = config.value("creation_mode", "RECREATE");
   fOpts.fOverwriteIfExists = config.value("overwrite_if_exists", false);

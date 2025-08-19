@@ -25,6 +25,7 @@ main(int argc, char** argv) {
   parser.add_flag("--mt", mt, "Enable multithreading (via ROOT ImplicitMT)");
   parser.add_option("-j,--jobs,--threads", threads, "Number of threads to use")
       ->check(CLI::Range(1, 1024)); // NOTE: buy a new CPU immediately when this is updated.
+  parser.allow_extras();
 
   CLI11_PARSE(parser, argc, argv);
 
