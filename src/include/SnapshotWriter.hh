@@ -15,5 +15,6 @@ private:
   std::string fFileName;
   std::vector<std::string> fColumnNames;
   ROOT::RDF::RSnapshotOptions fOpts;
+  ROOT::RDF::RResultPtr<ROOT::RDF::RInterface<ROOT::RDF::RDFDetail::RLoopManager>> fResult;
 };
 } // namespace SnopAnalysis

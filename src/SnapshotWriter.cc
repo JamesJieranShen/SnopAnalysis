@@ -50,14 +50,14 @@ SnapshotWriter::Write(ROOT::RDF::RNode df) {
   Logger::Info("Creating snapshot in file: {}", fFileName);
 
   if (fColumnNames.empty())
-    df.Snapshot(fTreeName, fFileName, "", fOpts);
+    fResult = df.Snapshot(fTreeName, fFileName, "", fOpts);
   else {
     Logger::Info("Writing only selected columns: " + std::accumulate(fColumnNames.begin(), fColumnNames.end(),
                                                                      std::string(""),
                                                                      [](const std::string& a, const std::string& b) {
                                                                        return a + (a.length() > 0 ? ", " : "") + b;
                                                                      }));
-    df.Snapshot(fTreeName, fFileName, fColumnNames, fOpts);
+    fResult = df.Snapshot(fTreeName, fFileName, fColumnNames, fOpts);
   }
 
   // Close the file
