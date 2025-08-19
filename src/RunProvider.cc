@@ -25,7 +25,7 @@ RunProvider::Configure(const nlohmann::json& config) {
     Logger::Info("Using run number: {}", run_number);
   }
   nlohmann::json cfg = {{"tree_name", tree_name},
-                        {"files", {std::format("{}/{}_r{:10d}_*.ntuple.root", directory, module_name, run_number)}},
+                        {"files", {std::format("{}/{}_r{:010d}_*.ntuple.root", directory, module_name, run_number)}},
                         {"sort", true}};
   fChain = TChainProvider::GetChain(cfg);
 }
