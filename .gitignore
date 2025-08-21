@@ -2,6 +2,7 @@ bin/
 build/
 *.root
 compile_commands.json
+runs.json
 
 # Standard C++ gitignore 
 # Prerequisites
