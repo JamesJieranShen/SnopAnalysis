@@ -44,7 +44,7 @@ CoincidenceStep::DoExecute(ROOT::RDF::RNode input) {
     double pY = posY[iPrompt];
     double pZ = posZ[iPrompt];
     ULong64_t pTime = time[iPrompt];
-    for (size_t iDelayed = iPrompt; iDelayed < time.size(); ++iDelayed) {
+    for (size_t iDelayed = iPrompt + 1; iDelayed < time.size(); ++iDelayed) {
       if (!delayed_candidate[iDelayed]) continue;
       ULong64_t dTime = DeltaT_Clock50(pTime, time[iDelayed]);
       if (dTime > fTimeWindow) break; // No need to check further
@@ -55,7 +55,6 @@ CoincidenceStep::DoExecute(ROOT::RDF::RNode input) {
       if (dR < fDeltaRWindow) { // qualifying pair found
         prompt_indices.push_back(iPrompt);
         delayed_indices.push_back(iDelayed);
-        break; // remove this line if search should continue for more delayed candidates
       }
     }
   }
