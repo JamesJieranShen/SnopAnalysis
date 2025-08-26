@@ -1,8 +1,8 @@
 #!/bin/env python3
 #SBATCH --job-name=snop-tag
 #SBATCH --output=/nfs/disk1/users/jierans/junk/snop-tag_deploy_%A_%a.log
-#SBATCH --partition=ubuntu_short
-#SBATCH --array=0-100
+#SBATCH --partition=ubuntu_long
+#SBATCH --array=0-733
 #SBATCH --mail-type=ALL
 #SBATCH --mail-user=jierans@sas.upenn.edu
 
@@ -36,7 +36,7 @@ print(f"Output file: {outfile}")
 
 subprocess.run([
     "./bin/RunAnalysis", 
-    "config/trim/trim_by_run.json",
+    "./config/tag_run.json",
     "-d", run_spec['directory'],
     "-m", run_spec['module'], 
     "-r", str(run_spec["run"]),
