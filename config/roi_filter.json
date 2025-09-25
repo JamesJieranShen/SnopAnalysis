@@ -29,7 +29,7 @@
       "type": "snapshot",
       "tree_name": "output",
       "lazy": false,
-      "file_name": "output.ntuple.root"
+      "file_name": "/nfs/disk1/users/jierans/snoplus/bismsb_roi/output.ntuple.root"
     }
   ]
 }

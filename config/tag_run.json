@@ -2,9 +2,7 @@
   "steps": [
     {
       "type": "run_provider"
-      // "directory": "/nfs/disk1/snoplus/bismsb/Analysis15_bMR_801_802_Bronze_358080_364310_Apr2025",
-      // "directory": "/nfs/disk2/jierans/Analysis15_bMR_801_802_Bronze_358080_364310_Apr2025",
-      // "module_name": "Analysis15_bMR"
+      // directory and module name provided by command line
     },
     {
       "type": "delta_t",
@@ -13,7 +11,7 @@
       "file_name": "/nfs/disk1/users/jierans/snoplus/bismsb_roi/cache/deltat_Analysis15_bMR_801_802_Bronze_358080_364310.ntuple.root",
       "tree_name": "output"
     },
-    { "type": "define", "name": "retrigger", "expr": "delta_t==460" },
+    { "type": "define", "name": "retrigger", "expr": "delta_t<=460" },
     {
       "type": "coincidence",
       "comment": "BiPo214",
@@ -37,14 +35,14 @@
       "time_window": 500,
       "label": "large_nhit_retrigger",
       "prompt_expr": "(retrigger==0)",
-      "delayed_expr": "(retrigger==1) && (nhitsCleaned > 40)"
+      "delayed_expr": "(retrigger==1) && (nhits > 40)"
     },
     {
       "type": "coincidence",
       "comment": "Events that follow a large nhit event",
       "time_window": 5e6,
       "label": "he_event",
-      "prompt_expr": "(nhitsCleaned > 3000)",
+      "prompt_expr": "(nhits > 3000)",
       "delayed_expr": "true"
     },
     {
@@ -52,14 +50,10 @@
       "comment": "hotspot",
       "time_window": 1e9,
       "label": "hotspot",
-      "prompt_expr": "(nhitsCleaned > 3000) && (posz_av > 5500) && ((posx > 500 && posx < 900 && posy > -900 && posy < -500) || (posx > 0 && posx < 500 && posy > -1250 && posy < -800))",
+      "prompt_expr": "(nhits > 3000) && (posz_av > 5500) && ((posx > 500 && posx < 900 && posy > -900 && posy < -500) || (posx > 0 && posx < 500 && posy > -1250 && posy < -800))",
       "delayed_expr": "true"
     },
     { "type": "describe", "short_format": true },
-    // { "type": "filter", "expr": "fitValid == true", "name": "fitValid", "comment": "fitValid" },
-    // { "type": "filter", "expr": "energy > 0.6", "comment": "energy > 0.6MeV" },
-    // { "type": "filter", "expr": "posr_av < 5200", "comment": "fiducial volume R < 5.2m" },
-    // { "type": "filter", "expr": "delta_t != 460", "comment": "Remove retriggers" },
     { "type": "report" },
     {
       "type": "snapshot",
