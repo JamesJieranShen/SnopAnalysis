@@ -29,9 +29,9 @@ if __name__ == "__main__":
         file_specs.sort(key=lambda x: (x["module"], x["run"]))
         run_specs[dd] = file_specs
     print(f"Found {ntasks} tasks in {len(directories)} directories.")
-    with open(f"{args.output}/jobs.json", 'w') as f:
+    with open(f"{args.output}/runs.json", 'w') as f:
         json.dump(run_specs, f, indent=2, sort_keys=True)
-    print(f"Writing job descriptions to {args.output}/jobs.json")
+    print(f"Writing job descriptions to {args.output}/runs.json")
     with open(f"{args.output}/tasks.txt", 'w') as f:
         for taskid in range(ntasks):
             f.write(str(taskid) + '\n')
