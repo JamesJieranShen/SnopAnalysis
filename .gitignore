@@ -1,12 +1,9 @@
-# Auto-generated files from run tagging control
-jobs.json
-tasks.txt
-
 bin/
 build/
 *.root
 compile_commands.json
 runs.json
+tasks.txt
 
 # Standard C++ gitignore 
 # Prerequisites
