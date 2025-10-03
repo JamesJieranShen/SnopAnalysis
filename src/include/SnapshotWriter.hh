@@ -14,6 +14,7 @@ private:
   std::string fTreeName;
   std::string fFileName;
   std::vector<std::string> fColumnNames;
+  std::vector<std::string> fPruneColumnNames;
   ROOT::RDF::RSnapshotOptions fOpts;
   ROOT::RDF::RResultPtr<ROOT::RDF::RInterface<ROOT::RDF::RDFDetail::RLoopManager>> fResult;
 };
