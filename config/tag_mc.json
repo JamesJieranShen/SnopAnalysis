@@ -1,15 +1,6 @@
 {
   "steps": [
-    {
-      "type": "tchain_provider",
-      "parts": [
-        {
-          "files": [
-            "/nfs/disk1/snoplus/rat801_bismsb_production/ScintFit_2p2ppo_2p2bismsbTl208Run_801_Bronze_354099_364310/*.ntuple.root"
-          ]
-        }
-      ]
-    },
+    { "type": "glob_provider" },
     {
       "type": "delta_t",
       "comment": "adjacent event delta_t for retrigger calculation",
@@ -27,12 +18,36 @@
     //   "name": "DCMask"
     // },
     { "type": "filter", "expr": "nhitsCleaned > 400", "name": "nhitsCleaned" },
-    { "type": "filter", "expr": "!retrigger", "comment": "No retrigger", "name": "retrigger" },
-    { "type": "filter", "expr": "fitValid == true", "name": "fitValid", "comment": "fitValid" },
-    { "type": "filter", "expr": "energy > 0.6 && energy < 5.0", "comment": "energy [0.6MeV, 5MeV]", "name": "Energy" },
-    { "type": "filter", "expr": "posr_av < 3300", "comment": "fiducial volume R < 3.3m", "name": "FiducialVolume" },
+    {
+      "type": "filter",
+      "expr": "!retrigger",
+      "comment": "No retrigger",
+      "name": "retrigger"
+    },
+    {
+      "type": "filter",
+      "expr": "fitValid == true",
+      "name": "fitValid",
+      "comment": "fitValid"
+    },
+    {
+      "type": "filter",
+      "expr": "energy > 0.6 && energy < 5.0",
+      "comment": "energy [0.6MeV, 5MeV]",
+      "name": "Energy"
+    },
+    {
+      "type": "filter",
+      "expr": "posr_av < 3300",
+      "comment": "fiducial volume R < 3.3m",
+      "name": "FiducialVolume"
+    },
     // stage 1: Classifier cuts
-    { "type": "filter", "expr": "alphaBeta212 > 0", "name": "BiPo212-AlphaBeta" },
+    {
+      "type": "filter",
+      "expr": "alphaBeta212 > 0",
+      "name": "BiPo212-AlphaBeta"
+    },
     { "type": "report" },
     {
       "type": "snapshot",
