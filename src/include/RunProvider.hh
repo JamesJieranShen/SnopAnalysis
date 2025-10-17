@@ -1,12 +1,9 @@
 #pragma once
 
-#include "TChainProvider.hh"
-
-#include <TChain.h>
-#include <nlohmann/json.hpp>
+#include "InputProvider.hh"
 
 namespace SnopAnalysis {
-class RunProvider : public TChainProvider {
+class RunProvider : public InputProvider {
 public:
   void Configure(const nlohmann::json& config) override;
   ROOT::RDataFrame Get() override;

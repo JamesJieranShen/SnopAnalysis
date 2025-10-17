@@ -11,10 +11,11 @@ public:
   void Configure(const nlohmann::json& config) override;
   ROOT::RDataFrame Get() override;
 
+  static std::unique_ptr<TChain> GetChain(const nlohmann::json& cfg);
+
 protected:
   std::unique_ptr<TChain> fChain;
   std::vector<std::unique_ptr<TChain>> fFriends;
-  std::unique_ptr<TChain> GetChain(const nlohmann::json& cfg);
 };
 
 } // namespace SnopAnalysis

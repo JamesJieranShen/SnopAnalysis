@@ -4,7 +4,6 @@
 #include "StepRegistry.hh"
 
 #include <TChainElement.h>
-#include <locale>
 
 namespace SnopAnalysis {
 void

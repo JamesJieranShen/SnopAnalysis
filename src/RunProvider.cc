@@ -5,6 +5,7 @@
 
 #include <CLI/CLI.hpp>
 #include <TChainElement.h>
+#include <TChainProvider.hh>
 
 namespace SnopAnalysis {
 void
