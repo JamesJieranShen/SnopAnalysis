@@ -30,6 +30,7 @@ CoincidenceStep::DoExecute(ROOT::RDF::RNode input) {
       input.Define(fPromptTagName, fPromptExpr)
           .Define(fDelayedTagName, fDelayedExpr)
           .Cache({fPosColumns[0], fPosColumns[1], fPosColumns[2], "clockCount50", fPromptTagName, fDelayedTagName});
+  std::vector<ULong64_t> rdfentry = input.Take<ULong64_t>("rdfentry_").GetValue();
   std::vector<double> posX = df_candidates.Take<double>(fPosColumns[0]).GetValue();
   std::vector<double> posY = df_candidates.Take<double>(fPosColumns[1]).GetValue();
   std::vector<double> posZ = df_candidates.Take<double>(fPosColumns[2]).GetValue();
@@ -62,15 +63,23 @@ CoincidenceStep::DoExecute(ROOT::RDF::RNode input) {
   Logger::Debug(
       "Coincidence step took {} ms",
       std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::high_resolution_clock::now() - start).count());
-  sort(prompt_indices.begin(), prompt_indices.end());
-  sort(delayed_indices.begin(), delayed_indices.end());
+  std::vector<ULong64_t> prompt_rdfentries;
+  std::vector<ULong64_t> delayed_rdfentries;
+  for (auto idx : prompt_indices) {
+    prompt_rdfentries.push_back(rdfentry[idx]);
+  }
+  for (auto idx : delayed_indices) {
+    delayed_rdfentries.push_back(rdfentry[idx]);
+  }
+  sort(prompt_rdfentries.begin(), prompt_rdfentries.end());
+  sort(delayed_rdfentries.begin(), delayed_rdfentries.end());
   // NOTE: may be faster to use a unordered_set
   auto result = input.Define(fPromptTagName,
-                             [pIdxs = std::make_shared<const std::vector<size_t>>(std::move(prompt_indices))](
+                             [pIdxs = std::make_shared<const std::vector<ULong64_t>>(std::move(prompt_rdfentries))](
                                  ULong64_t idx) { return (std::binary_search(pIdxs->begin(), pIdxs->end(), idx)); },
                              {"rdfentry_"});
   result = result.Define(fDelayedTagName,
-                         [dIdxs = std::make_shared<const std::vector<size_t>>(std::move(delayed_indices))](
+                         [dIdxs = std::make_shared<const std::vector<ULong64_t>>(std::move(delayed_rdfentries))](
                              ULong64_t idx) { return (std::binary_search(dIdxs->begin(), dIdxs->end(), idx)); },
                          {"rdfentry_"});
   return result;
