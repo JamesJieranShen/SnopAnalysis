@@ -3,10 +3,7 @@
     { "type": "glob_provider" },
     {
       "type": "delta_t",
-      "comment": "adjacent event delta_t for retrigger calculation",
-      "column_name": "delta_t",
-      "file_name": "/nfs/disk1/users/jierans/snoplus/bismsb_roi/cache/deltat_Analysis15_bMR_801_802_Bronze_358080_364310.ntuple.root",
-      "tree_name": "output"
+      "comment": "adjacent event delta_t for retrigger calculation"
     },
     { "type": "define", "name": "retrigger", "expr": "delta_t<=460" },
     { "type": "describe", "short_format": true },
