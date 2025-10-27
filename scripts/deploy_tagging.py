@@ -3,8 +3,8 @@
 #SBATCH --nodelist=nucomp1,nucomp2
 #SBATCH --nodes=1
 #SBATCH --output=/nfs/disk1/users/jierans/junk/snop-tag_deploy_%A_%a.log
-#SBATCH --partition=ubuntu_short
-#SBATCH --array=0-682
+#SBATCH --partition=ubuntu_long
+#SBATCH --array=0-1
 #SBATCH --mem=4G
 #SBATCH --mail-type=ALL
 #SBATCH --mail-user=jierans@sas.upenn.edu
@@ -17,7 +17,7 @@ import shutil
 import numpy as np
 print(os.getcwd())
 
-slurm_task_id = os.getenv("SLURM_ARRAY_TASK_ID")
+slurm_task_id = int(os.getenv("SLURM_ARRAY_TASK_ID"))
 task_id_list = np.loadtxt("./tasks.txt", dtype=int)
 task_id = task_id_list[slurm_task_id] if slurm_task_id is not None else None
 if task_id is not None:
