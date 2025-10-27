@@ -53,7 +53,8 @@
       "type": "snapshot",
       "tree_name": "output",
       "lazy": false,
-      "file_name": "ScintFit_2p2ppo_2p2bismsbTl208Run_801_Bronze_354099_364310_tagged_mc.root",
+      // provided by command line
+      //"file_name": "ScintFit_2p2ppo_2p2bismsbTl208Run_801_Bronze_354099_364310_tagged_mc.root",
       "prune_columns": [
         "isCal",
         "fecdHits",
