@@ -6,7 +6,30 @@
       "comment": "adjacent event delta_t for retrigger calculation"
     },
     { "type": "define", "name": "retrigger", "expr": "delta_t<=460" },
+    {
+      "type": "coincidence",
+      "comment": "BiPo214",
+      "time_window": 2e6,
+      "delta_r_limit": 1500,
+      "label": "BiPo214",
+      "prompt_expr": "retrigger==0",
+      "delayed_expr": "retrigger==0 && energy > 0.5 && energy < 10.0"
+    },
+    {
+      "type": "coincidence",
+      "comment": "retrigger that follows a Bipo214 prompt event",
+      "time_window": 500,
+      "label": "Bi214_retrigger",
+      "prompt_expr": "BiPo214_prompt",
+      "delayed_expr": "retrigger==1"
+    },
     { "type": "describe", "short_format": true },
+    // {
+    //   "type": "snapshot",
+    //   "tree_name": "output",
+    //   "lazy": true,
+    //   "file_name": "no_cuts.ntuple.root"
+    // },
 
     // do not run data cleaning over MC
     // {
@@ -53,6 +76,7 @@
       // provided by command line
       //"file_name": "ScintFit_2p2ppo_2p2bismsbTl208Run_801_Bronze_354099_364310_tagged_mc.root",
       "prune_columns": [
+        "mcEdep",
         "isCal",
         "fecdHits",
         "q",

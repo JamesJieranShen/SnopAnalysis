@@ -11,7 +11,7 @@
     },
     { "type": "describe", "short_format": true },
     // stage 0: Basic cuts
-    { "type": "filter", "expr": "nhitsCleaned > 400", "name": "nhitsCleaned" }, // should be removed after reprocessing
+    { "type": "filter", "expr": "nhitsCleaned > 200", "name": "nhitsCleaned" }, // should be removed after reprocessing
     { "type": "filter", "expr": "posr_av < 3300", "comment": "fiducial volume R < 3.3m", "name": "FiducialVolume" },
     {
       "type": "snapshot",
@@ -20,7 +20,7 @@
       "file_name": "/nfs/disk1/users/jierans/snoplus/bismsb_roi/roi_events_stage0.ntuple.root"
     },
     // stage 1: Classifier cuts
-    { "type": "filter", "expr": "alphaBeta212 > 0", "name": "BiPo212-AlphaBeta" },
+    { "type": "filter", "expr": "alphaBeta212 > 0 || nhitsCleaned < 400", "name": "BiPo212-AlphaBeta" },
     {
       "type": "snapshot",
       "tree_name": "output",
