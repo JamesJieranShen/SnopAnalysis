@@ -13,7 +13,7 @@ if __name__ == "__main__":
     ntasks = 0
     for dd in directories:
         directory = Path(dd)
-        files = [f for f in directory.iterdir() if f.is_file() and f.suffix == '.root']
+        files = [f for f in directory.iterdir() if f.suffix == '.root']
         file_specs = set()
         for file in files:
             fname_no_suffix = file.name.removesuffix('.ntuple.root')
