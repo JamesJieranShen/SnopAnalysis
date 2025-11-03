@@ -2,6 +2,12 @@
   "steps": [
     { "type": "glob_provider" },
     {
+      "type": "count",
+      // "name":
+      "count_mc": true,
+      "count_total": false
+    },
+    {
       "type": "delta_t",
       "comment": "adjacent event delta_t for retrigger calculation"
     },

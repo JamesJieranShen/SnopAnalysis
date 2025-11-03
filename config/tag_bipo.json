@@ -2,6 +2,12 @@
   "steps": [
     { "type": "glob_provider" },
     {
+      "type": "count",
+      // "name":
+      "count_mc": true,
+      "count_total": false
+    },
+    {
       "type": "delta_t",
       "comment": "adjacent event delta_t for retrigger calculation"
     },
@@ -15,14 +21,14 @@
       "prompt_expr": "retrigger==0",
       "delayed_expr": "retrigger==0 && energy > 0.5 && energy < 10.0"
     },
-    {
-      "type": "coincidence",
-      "comment": "retrigger that follows a Bipo214 prompt event",
-      "time_window": 500,
-      "label": "Bi214_retrigger",
-      "prompt_expr": "BiPo214_prompt",
-      "delayed_expr": "retrigger==1"
-    },
+    // {
+    //   "type": "coincidence",
+    //   "comment": "retrigger that follows a Bipo214 prompt event",
+    //   "time_window": 500,
+    //   "label": "Bi214_retrigger",
+    //   "prompt_expr": "BiPo214_prompt",
+    //   "delayed_expr": "retrigger==1"
+    // },
     { "type": "describe", "short_format": true },
     // {
     //   "type": "snapshot",
