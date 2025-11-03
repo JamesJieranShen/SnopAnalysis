@@ -5,7 +5,6 @@
 #include "TObjString.h"
 
 #include <CLI/CLI.hpp>
-#include <locale>
 
 namespace SnopAnalysis {
 void
@@ -14,7 +13,7 @@ SnapshotWriter::Configure(const nlohmann::json& config) {
   fTreeName = config.value("tree_name", "output");
   fFileName = config.value("file_name", "");
   if (fFileName == "") {
-    Logger::Info("No file name provided, using attempting to read command line.");
+    Logger::Info("No file name provided, attempting to read command line.");
     CLI::App app{"run_number_parser"};
     app.add_option("-o,--output", fFileName, "output filename");
     app.allow_extras();
