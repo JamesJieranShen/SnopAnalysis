@@ -1,6 +1,12 @@
 {
   "steps": [
-    { "type": "glob_provider" },
+    {
+      "type": "file_list_provider",
+      "files": [
+        "/nfs/disk1/snoplus/rat801_bismsb_production/ScintFit_2p2ppo_2p2bismsbBipo212Run_801_Bronze_354099_364310/ScintFit_2p2ppo_2p2bismsbBipo212Run_r354099_s0_p0.ntuple.root",
+        "/nfs/disk1/snoplus/rat801_bismsb_production/ScintFit_2p2ppo_2p2bismsbBipo212Run_801_Bronze_354099_364310/ScintFit_2p2ppo_2p2bismsbBipo212Run_r354101_s0_p0.ntuple.root"
+      ]
+    },
     {
       "type": "count",
       // "name":
@@ -12,44 +18,14 @@
       "comment": "adjacent event delta_t for retrigger calculation"
     },
     { "type": "define", "name": "retrigger", "expr": "delta_t<=460" },
-    {
-      "type": "coincidence",
-      "comment": "BiPo214",
-      "time_window": 2e6,
-      "delta_r_limit": 1500,
-      "label": "BiPo214",
-      "prompt_expr": "retrigger==0",
-      "delayed_expr": "retrigger==0 && energy > 0.5 && energy < 10.0"
-    },
-    // {
-    //   "type": "coincidence",
-    //   "comment": "retrigger that follows a Bipo214 prompt event",
-    //   "time_window": 500,
-    //   "label": "Bi214_retrigger",
-    //   "prompt_expr": "BiPo214_prompt",
-    //   "delayed_expr": "retrigger==1"
-    // },
     { "type": "describe", "short_format": true },
-    // {
-    //   "type": "snapshot",
-    //   "tree_name": "output",
-    //   "lazy": true,
-    //   "file_name": "no_cuts.ntuple.root"
-    // },
-
-    // do not run data cleaning over MC
+    { "type": "filter", "expr": "nhitsCleaned > 200", "name": "nhitsCleaned" },
     // {
     //   "type": "filter",
-    //   "expr": "((dcApplied & 0xD82100000162C6) & dcFlagged) == (dcApplied & 0xD82100000162C6)",
-    //   "name": "DCMask"
+    //   "expr": "!retrigger",
+    //   "comment": "No retrigger",
+    //   "name": "retrigger"
     // },
-    { "type": "filter", "expr": "nhitsCleaned > 200", "name": "nhitsCleaned" },
-    {
-      "type": "filter",
-      "expr": "!retrigger",
-      "comment": "No retrigger",
-      "name": "retrigger"
-    },
     {
       "type": "filter",
       "expr": "fitValid == true",
@@ -74,17 +50,14 @@
       "expr": "alphaBeta212 > 0 || nhitsCleaned < 400",
       "name": "BiPo212-AlphaBeta"
     },
-    // stage 2: Coincidence cuts
-    { "type": "filter", "expr": "!BiPo214_prompt && !BiPo214_follower", "name": "BiPo214Coincidence" },
+
     { "type": "report" },
     {
       "type": "snapshot",
       "tree_name": "output",
       "lazy": false,
-      // provided by command line
-      //"file_name": "ScintFit_2p2ppo_2p2bismsbTl208Run_801_Bronze_354099_364310_tagged_mc.root",
+      "file_name": "test.ntuple.root",
       "prune_columns": [
-        "mcEdep",
         "isCal",
         "fecdHits",
         "q",
