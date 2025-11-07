@@ -62,6 +62,9 @@ TChainProvider::GetChain(const nlohmann::json& cfg) {
       }
     }
   }
+  // performance tuning suggested by Sam
+  result->SetCacheSize(100 * 1024 * 1024);
+  result->SetCacheLearnEntries(100); // use the first N entries to learn which branches are used
   return result;
 }
 
