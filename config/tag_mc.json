@@ -7,6 +7,8 @@
       "count_mc": true,
       "count_total": false
     },
+    // this is needed to make sure delta T calculation is correct.
+    { "type": "filter", "expr": "evIndex >= 0", "name": "TriggerdEvents" },
     {
       "type": "delta_t",
       "comment": "adjacent event delta_t for retrigger calculation"
