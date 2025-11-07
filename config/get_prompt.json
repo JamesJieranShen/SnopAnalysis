@@ -1,0 +1,20 @@
+{
+  "steps": [
+    { "type": "glob_provider" },
+    {
+      "type": "count",
+      // "name":
+      "count_mc": true,
+      "count_total": false
+    },
+    { "type": "filter", "expr": "evIndex==0", "name": "prompt" },
+    { "type": "report" },
+    {
+      "type": "snapshot",
+      "tree_name": "output",
+      "lazy": false
+      // provided by command line
+      //"file_name": "ScintFit_2p2ppo_2p2bismsbTl208Run_801_Bronze_354099_364310_tagged_mc.root",
+    }
+  ]
+}
