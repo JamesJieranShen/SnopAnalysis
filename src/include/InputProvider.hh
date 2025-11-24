@@ -12,7 +12,8 @@ public:
     if (input.Count().GetValue() > 0) {
       Logger::Info("InputProvider called on non-empty dataframe. Previous data is now discarded.");
     }
-    return Get();
+    auto df = Get();
+    return df;
   }
 
 protected:

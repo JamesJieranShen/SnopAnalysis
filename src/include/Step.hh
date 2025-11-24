@@ -2,6 +2,7 @@
 
 #include <Context.hh>
 #include <Logger.hh>
+#include <ROOT/RDFHelpers.hxx>
 #include <ROOT/RDataFrame.hxx>
 #include <cxxabi.h>
 #include <nlohmann/json.hpp>
@@ -28,8 +29,11 @@ public:
       Logger::Die("This step is configured to run sequentially, but implicit multithreading is enabled. "
                   "Please disable implicit multithreading or set 'sequential_only' to false in the configuration.");
     }
-    return DoExecute(input);
-    Logger::Info("Scheduled STEP {}: {} ({}).", fStepID, demangle(typeid(*this).name()), fComment);
+    Logger::Info("Starting STEP {}: {} ({}).", fStepID, demangle(typeid(*this).name()), fComment);
+    auto result = DoExecute(input);
+    ROOT::RDF::Experimental::AddProgressBar(result);
+    Logger::Info("Finished STEP {}: {} ({}).", fStepID, demangle(typeid(*this).name()), fComment);
+    return result;
   }
   void Report() {
     Logger::Debug("Reporting step {}: {} ({}).", fStepID, demangle(typeid(*this).name()), fComment);
