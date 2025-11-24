@@ -1,0 +1,29 @@
+{
+  "steps": [
+    {
+      "type": "file_list_provider",
+      "tree_name": "output",
+      "files": ["/nfs/disk1/users/jierans/snoplus/bismsb_roi/roi_events_stage0.ntuple.root"]
+    },
+    { "type": "describe", "short_format": true },
+    { "type": "filter", "expr": "BiPo214_prompt", "name": "Bi214" },
+    {
+      "type": "filter",
+      "expr": "!he_event_prompt && !he_event_follower",
+      "name": "HighEnergyVeto"
+    },
+    {
+      "type": "filter",
+      "expr": "!hotspot_prompt && !hotspot_follower",
+      "name": "HotspotVeto"
+    },
+    { "type": "filter", "expr": "energy > 1.2", "name": "PromptBeta" },
+    { "type": "report" },
+    {
+      "type": "snapshot",
+      "tree_name": "output",
+      "lazy": false,
+      "file_name": "/nfs/disk1/users/jierans/snoplus/bismsb_roi/bi214_sample.ntuple.root"
+    }
+  ]
+}

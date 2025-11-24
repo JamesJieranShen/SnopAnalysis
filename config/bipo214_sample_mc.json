@@ -1,6 +1,18 @@
 {
   "steps": [
-    { "type": "glob_provider" },
+    {
+      "type": "tchain_provider",
+      "parts": [
+        {
+          "tree_name": "output",
+          // "files": ["root://disk1.localdomain//snoplus/rat801_bismsb_production/ScintFit_2p2ppo_2p2bismsbBipo212Run_801_Bronze.ntuple.root"]
+          "files": [
+            "root://disk1.localdomain//snoplus/rat801_bismsb_production/ScintFit_2p2ppo_2p2bismsbAlphan_Lab_13cRun_801_Bronze.ntuple.root"
+          ]
+          // "files": ["/nfs/disk1/snoplus/rat801_bismsb_production/ScintFit_2p2ppo_2p2bismsbBipo214Run_801_Bronze/*.ntuple.root"]
+        }
+      ]
+    },
     {
       "type": "count",
       // "name":
@@ -38,8 +50,8 @@
     },
     {
       "type": "filter",
-      "expr": "energy > 0.6 && energy < 5.0",
-      "comment": "energy [0.6MeV, 5MeV]",
+      "expr": "energy > 0.6 && energy < 6.0",
+      "comment": "energy [0.6MeV, 6MeV]",
       "name": "Energy"
     },
     {
@@ -48,21 +60,15 @@
       "comment": "fiducial volume R < 3.3m",
       "name": "FiducialVolume"
     },
-    // stage 1: Classifier cuts
-    {
-      "type": "filter",
-      "expr": "alphaBeta212 > 0 || nhitsCleaned < 400",
-      "name": "BiPo212-AlphaBeta"
-    },
-    // stage 2: Coincidence cuts
-    { "type": "filter", "expr": "!BiPo214_prompt && !BiPo214_follower", "name": "BiPo214Coincidence" },
+    { "type": "filter", "expr": "BiPo214_prompt", "name": "Bi214" },
+    { "type": "filter", "expr": "energy > 1.2", "name": "PromptBeta" },
     { "type": "report" },
     {
       "type": "snapshot",
       "tree_name": "output",
       "lazy": false,
       // provided by command line
-      //"file_name": "ScintFit_2p2ppo_2p2bismsbTl208Run_801_Bronze_354099_364310_tagged_mc.root",
+      "file_name": "/nfs/disk1/users/jierans/snoplus/bismsb_roi/alphan_prompt_sample_mc.ntuple.root",
       "prune_columns": [
         "mcEdep",
         "isCal",

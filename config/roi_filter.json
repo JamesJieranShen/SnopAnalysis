@@ -22,6 +22,11 @@
     // stage 1: Classifier cuts
     { "type": "filter", "expr": "alphaBeta212 > 0 || nhitsCleaned < 400", "name": "BiPo212-AlphaBeta" },
     {
+      "type": "filter",
+      "expr": "(posFOM / nhitsCleaned > 12) && (necknhits / nhitsCleaned < 0.01) && (pow(posxPosError - posxNegError, 2) + pow(posyPosError - posyNegError, 2) + pow(poszPosError - poszNegError, 2) < pow(900, 2))",
+      "name": "HighNeck, no ITR/Quad cut"
+    },
+    {
       "type": "snapshot",
       "tree_name": "output",
       "lazy": true,
