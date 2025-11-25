@@ -5,6 +5,47 @@
 
 #include <TChainElement.h>
 
+std::string
+convertPathToXRootD(const std::string& rawPath) {
+  // Configuration
+  const std::string inputPrefix = "/nfs/";
+  const std::string domain = ".localdomain";
+
+  // This is the physical path where data lives on the server node
+  // Use "/" if the path on the server is identical to the path after /nfs/node/
+  // Use "//data" if /nfs/disk1/foo maps to /data/foo on the server
+  const std::string serverExportBase = "//data";
+
+  // 1. Validation: Check if path starts with /nfs/
+  if (rawPath.find(inputPrefix) != 0) {
+    std::cerr << "Warning: Path does not start with " << inputPrefix << std::endl;
+    return rawPath;
+  }
+
+  // 2. Find the end of the node name
+  // We start searching after "/nfs/" (length 5)
+  size_t nodeStart = inputPrefix.length();
+  size_t nodeEnd = rawPath.find('/', nodeStart);
+
+  if (nodeEnd == std::string::npos) {
+    return rawPath; // Malformed path
+  }
+
+  // 3. Extract components
+  std::string nodeName = rawPath.substr(nodeStart, nodeEnd - nodeStart);
+  if (nodeName != "disk1" && nodeName != "disk2") {
+    return rawPath;
+  }
+  std::string remainingPath = rawPath.substr(nodeEnd); // Includes the leading /
+
+  // 4. Construct XRootD URL
+  // Format: root://<host>/<path>
+  // Note: XRootD often requires a double slash "//" to indicate an absolute path on the server
+  std::string xrootdUrl = "root://" + nodeName + domain + "/" + serverExportBase + remainingPath;
+
+  return xrootdUrl;
+}
+
 namespace SnopAnalysis {
 void
 TChainProvider::Configure(const nlohmann::json& config) {
@@ -50,7 +91,9 @@ TChainProvider::GetChain(const nlohmann::json& cfg) {
     if (run_sort) std::sort(filelist.begin(), filelist.end());
     for (const std::string& file : filelist) {
       Logger::Trace("Adding file: {}", file);
-      result->Add(file.c_str());
+      std::string xrootdPath = convertPathToXRootD(file);
+      Logger::Trace("Converted to XRootD path: {} -> {}", file, xrootdPath);
+      result->Add(xrootdPath.c_str());
     }
     if (filelist.empty()) {
       Logger::Warn("No files matched the pattern: {}", pattern);
@@ -62,9 +105,6 @@ TChainProvider::GetChain(const nlohmann::json& cfg) {
       }
     }
   }
-  // performance tuning suggested by Sam
-  result->SetCacheSize(100 * 1024 * 1024);
-  result->SetCacheLearnEntries(100); // use the first N entries to learn which branches are used
   return result;
 }
 
