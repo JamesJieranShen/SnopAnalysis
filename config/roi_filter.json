@@ -11,6 +11,12 @@
     },
     { "type": "describe", "short_format": true },
     // stage 0: Basic cuts
+    {
+      "type": "filter",
+      "expr": "!(runID >= 354099 && runID <= 354425) && !(runID >= 357015 && runID <= 357181)",
+      "comment": "remove bad runs",
+      "name": "BadRuns"
+    },
     { "type": "filter", "expr": "nhitsCleaned > 200", "name": "nhitsCleaned" }, // should be removed after reprocessing
     { "type": "filter", "expr": "posr_av < 3300", "comment": "fiducial volume R < 3.3m", "name": "FiducialVolume" },
     {
