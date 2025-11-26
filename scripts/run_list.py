@@ -6,10 +6,12 @@ import argparse
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Generate a JSON list of runs and modules from ROOT files in specified directories.")
     parser.add_argument("-o", "--output", default='.', help='Directory of the output files. Will create jobs.json and tasks.txt')
+    parser.add_argument("--min-run", type=int, default=None, help="Minimum run number (inclusive) to include.")
+    parser.add_argument("--max-run", type=int, default=None, help="Maximum run number (inclusive) to include.")
     parser.add_argument("directories", nargs='+', help="Directories to scan for ROOT files.")
     args = parser.parse_args()
     run_specs = {}
-    directories = sys.argv[1:]
+    directories = args.directories #sys.argv[1:]
     ntasks = 0
     for dd in directories:
         directory = Path(dd)
@@ -19,6 +21,11 @@ if __name__ == "__main__":
             fname_no_suffix = file.name.removesuffix('.ntuple.root')
             runstring = fname_no_suffix.split("_")[-3]
             run = int(runstring[1:]) # remove leading 'r'
+            # Apply run range cuts
+            if args.min_run is not None and run < args.min_run:
+                continue
+            if args.max_run is not None and run > args.max_run:
+                continue
             module = "_".join(fname_no_suffix.split("_")[:-3])
             file_specs.add(frozenset({
                 "module": module, "run": run
