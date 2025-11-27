@@ -1,11 +1,11 @@
 #!/bin/env python3
 #SBATCH --job-name=snop-tag
-#SBATCH --nodelist=nucomp1,nucomp2
+##SBATCH --nodelist=nucomp1,nucomp2
 #SBATCH --nodes=1
-#SBATCH --output=/nfs/disk1/users/jierans/junk/snop-tag_deploy_%A_%a.log
-#SBATCH --partition=ubuntu_long
+#SBATCH --output=/nfs/disk1/users/jierans/junk/snop-mc-tag_%A_%a.log
+#SBATCH --partition=gpu
 #SBATCH --array=0-64
-#SBATCH --mem=4G
+#SBATCH --mem=8G
 #SBATCH --mail-type=ALL
 #SBATCH --mail-user=jierans@sas.upenn.edu
 

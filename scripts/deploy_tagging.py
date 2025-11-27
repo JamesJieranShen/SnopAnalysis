@@ -1,11 +1,12 @@
 #!/bin/env python3
 #SBATCH --job-name=snop-tag
-#SBATCH --nodelist=nucomp1,nucomp2
+##SBATCH --nodelist=nucomp1,nucomp2
 #SBATCH --nodes=1
 #SBATCH --output=/nfs/disk1/users/jierans/junk/snop-tag_deploy_%A_%a.log
-#SBATCH --partition=ubuntu_long
-#SBATCH --array=0-1
+#SBATCH --partition=gpu
+#SBATCH --array=0-520
 #SBATCH --mem=4G
+#SBATCH --cpus-per-task=1
 #SBATCH --mail-type=ALL
 #SBATCH --mail-user=jierans@sas.upenn.edu
 
@@ -46,7 +47,7 @@ print(f"Output file: {outfile}")
 
 subprocess.run([
     "./bin/RunAnalysis", 
-    "./config/tag_run.json",
+    "./config/bismsb/tag_run.json",
     "-d", run_spec['directory'],
     "-m", run_spec['module'], 
     "-r", str(run_spec["run"]),
