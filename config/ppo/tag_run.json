@@ -68,7 +68,7 @@
       "delta_r_limit": 2500, // was 1500
       "label": "IBD",
       "prompt_expr": "(energy > 0.9 && energy < 40.0) && (posr_av < 5800)", // posr for rat708 & posr_av for rat801
-      "delayed_expr": "(energy > 1.85 && energy < 2.50)"
+      "delayed_expr": "(energy > 1.85 && energy < 2.50) && (posr_av < 5800)"
     },
     { "type": "report" },
     {

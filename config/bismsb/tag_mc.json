@@ -48,11 +48,12 @@
       "name": "FiducialVolume"
     },
     // stage 1: Classifier cuts
-    {
-      "type": "filter",
-      "expr": "alphaBeta212 > 0 || nhitsCleaned < 400",
-      "name": "BiPo212-AlphaBeta"
-    },
+    // {
+    //   "type": "filter",
+    //   "expr": "alphaBeta212 > 0 || nhitsCleaned < 400",
+    //   "name": "BiPo212-AlphaBeta"
+    // },
+    { "type": "filter", "expr": "beta14 > -0.1 && beta14 < 0.04", "name": "Beta14" },
     { "type": "report" },
     {
       "type": "snapshot",

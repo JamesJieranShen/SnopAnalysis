@@ -5,7 +5,7 @@
       "parts": [
         {
           "tree_name": "output",
-          "files": ["/nfs/disk1/users/jierans/snoplus/bismsb_roi/tagged-files/bismsb_bronze_combined.ntuple.root"]
+          "files": ["/nfs/disk1/users/jierans/snoplus/ppo_roi/tagged-files/ppo_bronze_combined.ntuple.root"]
         }
       ]
     },
@@ -13,45 +13,42 @@
     // stage 0: Basic cuts
     {
       "type": "filter",
-      "expr": "!(runID >= 354099 && runID <= 354425) && !(runID >= 357015 && runID <= 357181)",
+      "expr": "runID >= 300500",
       "comment": "remove bad runs",
       "name": "BadRuns"
     },
-    { "type": "filter", "expr": "nhitsCleaned > 200", "name": "nhitsCleaned" }, // should be removed after reprocessing
     { "type": "filter", "expr": "posr_av < 3300", "comment": "fiducial volume R < 3.3m", "name": "FiducialVolume" },
     {
       "type": "snapshot",
       "tree_name": "output",
       "lazy": true,
-      "file_name": "/nfs/disk1/users/jierans/snoplus/bismsb_roi/roi_events_stage0.ntuple.root"
+      "file_name": "/nfs/disk1/users/jierans/snoplus/ppo_roi/roi_events_stage0.ntuple.root"
     },
     // stage 1: Classifier cuts
-    // { "type": "filter", "expr": "alphaBeta212 > 0 || nhitsCleaned < 400", "name": "BiPo212-AlphaBeta" },
     { "type": "filter", "expr": "beta14 > -0.1 && beta14 < 0.04", "name": "Beta14" },
-    {
-      "type": "filter",
-      "expr": "(posFOM / nhitsCleaned > 12) && (necknhits / nhitsCleaned < 0.01) && (pow(posxPosError - posxNegError, 2) + pow(posyPosError - posyNegError, 2) + pow(poszPosError - poszNegError, 2) < pow(900, 2))",
-      "name": "HighNeck, no ITR/Quad cut"
-    },
+    // { "type": "filter", "expr": "alphaBeta212 > 0 || nhitsCleaned < 400", "name": "BiPo212-AlphaBeta" },
+    // {
+    //   "type": "filter",
+    //   "expr": "(posFOM / nhitsCleaned > 12) && (necknhits / nhitsCleaned < 0.01) && (pow(posxPosError - posxNegError, 2) + pow(posyPosError - posyNegError, 2) + pow(poszPosError - poszNegError, 2) < pow(900, 2))",
+    //   "name": "HighNeck, no ITR/Quad cut"
+    // },
     {
       "type": "snapshot",
       "tree_name": "output",
       "lazy": true,
-      "file_name": "/nfs/disk1/users/jierans/snoplus/bismsb_roi/roi_events_stage1.ntuple.root"
+      "file_name": "/nfs/disk1/users/jierans/snoplus/ppo_roi/roi_events_stage1.ntuple.root"
     },
 
     // stage 2: Coincidence cuts
     { "type": "filter", "expr": "!BiPo214_prompt && !BiPo214_follower", "name": "BiPo214Coincidence" },
     { "type": "filter", "expr": "!he_event_prompt && !he_event_follower", "name": "HighEnergyVeto" },
     { "type": "filter", "expr": "!hotspot_prompt && !hotspot_follower", "name": "HotspotVeto" },
-    // { "type": "filter", "expr": "!large_nhit_retrigger_prompt", "name": "LargeRetriggerOccupancy" },
-
     { "type": "report" },
     {
       "type": "snapshot",
       "tree_name": "output",
       "lazy": false,
-      "file_name": "/nfs/disk1/users/jierans/snoplus/bismsb_roi/roi_events.ntuple.root"
+      "file_name": "/nfs/disk1/users/jierans/snoplus/ppo_roi/roi_events.ntuple.root"
     }
   ]
 }

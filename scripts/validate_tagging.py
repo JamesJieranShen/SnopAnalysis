@@ -5,7 +5,7 @@ import uproot
 
 print(os.getcwd())
 
-outdir = "/nfs/disk1/users/jierans/snoplus/bismsb_roi/tagged-files"
+outdir = "/nfs/disk1/users/jierans/snoplus/ppo_roi/tagged-files/nickle"
 
 run_list = json.load(open("runs.json"))
 with open("tasks.txt") as f:

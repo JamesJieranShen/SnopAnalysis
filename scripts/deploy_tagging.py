@@ -48,6 +48,7 @@ if __name__ == "__main__":
     print(f"Using config file: {args.config}")
     print(f"Output directory: {outdir}")
     print(f"Working directory: {workdir}")
+    Path(outdir).mkdir(parents=True, exist_ok=True)
     Path(workdir).mkdir(parents=True, exist_ok=True)
 
     run_list = json.load(open("runs.json"))
