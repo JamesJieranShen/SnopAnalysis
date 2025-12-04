@@ -55,6 +55,11 @@
     //   "name": "BiPo212-AlphaBeta"
     // },
     { "type": "filter", "expr": "beta14 > -0.1 && beta14 < 0.04", "name": "Beta14" },
+    {
+      "type": "filter",
+      "expr": "(posFOM / nhitsCleaned > 12) && (necknhits / nhitsCleaned < 0.01) && (pow(posxPosError - posxNegError, 2) + pow(posyPosError - posyNegError, 2) + pow(poszPosError - poszNegError, 2) < pow(900, 2))",
+      "name": "HighNeck, no ITR/Quad cut"
+    },
     // stage 2: Coincidence cuts
     { "type": "filter", "expr": "!BiPo214_prompt && !BiPo214_follower", "name": "BiPo214Coincidence" },
     { "type": "report" },
