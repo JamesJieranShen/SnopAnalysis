@@ -4,12 +4,12 @@
   "coincident_macro": "./config/ppo/tag_mc_bipo.json",
   "coincident_modules": [
     "ScintFit_2p2Bipo212Run_801_PPO_Bronze_300000_310637",
-    "ScintFit_2p2Bipo214Run_801_PPO_Bronze_300000_310637"
+    "ScintFit_2p2Bipo214Run_801_PPO_Bronze_300000_310637",
+    "ScintFit_2p2Alphan_Lab_13cRun_801_PPO_Bronze_300000_310637"
   ],
   "modules": [
     "ScintFit_2p2Ac228Run_801_PPO_Bronze_300000_310637",
     "ScintFit_2p2Agm110Run_801_PPO_Bronze_300000_310637",
-    // "ScintFit_2p2Alphan_Lab_13cRun_801_PPO_Bronze_300000_310637",
     // "ScintFit_2p2Alphan_Lab_Avin_Av_13cRun_801_PPO_Bronze_300000_310637",
     // "ScintFit_2p2Alphan_Lab_Avin_Av_18oRun_801_PPO_Bronze_300000_310637",
     // "ScintFit_2p2Alphan_Lab_Avin_Ls_13cRun_801_PPO_Bronze_300000_310637",
@@ -21,8 +21,6 @@
     "ScintFit_2p2Bi214_AvRun_801_PPO_Bronze_300000_310637",
     "ScintFit_2p2Bi214_Exwater_ShellRun_801_PPO_Bronze_300000_310637",
     "ScintFit_2p2Bi214_Hdropes_ShellRun_801_PPO_Bronze_300000_310637",
-    // "ScintFit_2p2Bipo212Run_801_PPO_Bronze_300000_310637",
-    // "ScintFit_2p2Bipo214Run_801_PPO_Bronze_300000_310637",
     "ScintFit_2p2C10_ScintRun_801_PPO_Bronze_300000_310637",
     "ScintFit_2p2C11Run_801_PPO_Bronze_300000_310637",
     "ScintFit_2p2C14Run_801_PPO_Bronze_300000_310637",
