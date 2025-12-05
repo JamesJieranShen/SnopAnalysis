@@ -43,3 +43,8 @@ if __name__ == "__main__":
         for taskid in range(ntasks):
             f.write(str(taskid) + '\n')
     print(f"Writing task list to {args.output}/tasks.txt")
+    with open(f"{args.output}/runs.txt", 'w') as f:
+        for dd in run_specs:
+            for spec in run_specs[dd]:
+                f.write(str(spec['run']) + '\n')
+    print(f"Writing run list to {args.output}/runs.txt")
