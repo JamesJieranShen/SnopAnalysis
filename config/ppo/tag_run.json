@@ -13,20 +13,20 @@
     {
       "type": "coincidence",
       "comment": "BiPo214",
-      "time_window": 2e6,
+      "time_window": 2.5e6,
       "delta_r_limit": 1500,
       "label": "BiPo214",
-      "prompt_expr": "retrigger==0",
+      "prompt_expr": "retrigger==0 && energy > 0.8 && energy < 15.0",
       "delayed_expr": "retrigger==0 && energy > 0.5 && energy < 10.0"
     },
-    {
-      "type": "coincidence",
-      "comment": "retrigger that follows a Bipo214 prompt event",
-      "time_window": 500,
-      "label": "Bi214_retrigger",
-      "prompt_expr": "BiPo214_prompt",
-      "delayed_expr": "retrigger==1"
-    },
+    // {
+    //   "type": "coincidence",
+    //   "comment": "retrigger that follows a Bipo214 prompt event",
+    //   "time_window": 500,
+    //   "label": "Bi214_retrigger",
+    //   "prompt_expr": "BiPo214_prompt",
+    //   "delayed_expr": "retrigger==1"
+    // },
     {
       "type": "coincidence",
       "comment": "Events with large nhits in the retriggers",
@@ -67,8 +67,17 @@
       "time_window": 2e6,
       "delta_r_limit": 2500, // was 1500
       "label": "IBD",
-      "prompt_expr": "(energy > 0.9 && energy < 40.0) && (posr_av < 5800)", // posr for rat708 & posr_av for rat801
+      "prompt_expr": "(energy > 0.9 && energy < 40.0) && (posr_av < 5800)",
       "delayed_expr": "(energy > 1.85 && energy < 2.50) && (posr_av < 5800)"
+    },
+    {
+      "type": "coincidence",
+      "comment": "IBD pair with higher prompt maximum energy, no FV on neutron",
+      "time_window": 2e6,
+      "delta_r_limit": 2500, // was 1500
+      "label": "IBD_no_FV_ncap",
+      "prompt_expr": "(energy > 0.9 && energy < 40.0) && (posr_av < 5800)",
+      "delayed_expr": "(energy > 1.85 && energy < 2.50)"
     },
     { "type": "report" },
     {

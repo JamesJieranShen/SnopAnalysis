@@ -16,10 +16,10 @@
     {
       "type": "coincidence",
       "comment": "BiPo214",
-      "time_window": 2e6,
+      "time_window": 2.5e6,
       "delta_r_limit": 1500,
       "label": "BiPo214",
-      "prompt_expr": "retrigger==0",
+      "prompt_expr": "retrigger==0 && energy > 0.8 && energy < 15.0",
       "delayed_expr": "retrigger==0 && energy > 0.5 && energy < 10.0"
     },
     { "type": "describe", "short_format": true },
@@ -35,12 +35,6 @@
       "expr": "fitValid == true",
       "name": "fitValid",
       "comment": "fitValid"
-    },
-    {
-      "type": "filter",
-      "expr": "energy > 0.6 && energy < 6.0",
-      "comment": "energy [0.6MeV, 6MeV]",
-      "name": "Energy"
     },
     {
       "type": "filter",
