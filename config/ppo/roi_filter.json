@@ -5,7 +5,7 @@
       "parts": [
         {
           "tree_name": "output",
-          "files": ["/nfs/disk1/users/jierans/snoplus/ppo_roi/tagged-files/ppo_bronze_combined.ntuple.root"]
+          "files": ["/nfs/disk1/users/jierans/snoplus/ppo_roi/tagged-files-multisite/ppo_bronze_combined.ntuple.root"]
         }
       ]
     },

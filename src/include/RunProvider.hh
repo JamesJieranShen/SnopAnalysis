@@ -1,6 +1,7 @@
 #pragma once
 
 #include "InputProvider.hh"
+#include "TChain.h"
 
 namespace SnopAnalysis {
 class RunProvider : public InputProvider {

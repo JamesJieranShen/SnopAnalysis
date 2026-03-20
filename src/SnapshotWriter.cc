@@ -2,6 +2,7 @@
 
 #include "Logger.hh"
 #include "StepRegistry.hh"
+#include "TFile.h"
 #include "TObjString.h"
 
 #include <CLI/CLI.hpp>

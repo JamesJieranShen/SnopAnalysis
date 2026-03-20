@@ -4,6 +4,7 @@
       "type": "run_provider"
       // directory and module name provided by command line
     },
+    { "type": "describe", "short_format": true },
     {
       "type": "delta_t",
       "comment": "adjacent event delta_t for retrigger calculation"
@@ -56,9 +57,47 @@
       "expr": "((dcApplied & 0xD82100000162C6) & dcFlagged) == (dcApplied & 0xD82100000162C6)",
       "name": "DCMask"
     },
-    { "type": "filter", "expr": "nhitsCleaned > 200", "name": "nhitsCleaned" },
-    { "type": "filter", "expr": "!retrigger", "comment": "No retrigger", "name": "retrigger" },
-    { "type": "filter", "expr": "fitValid == true", "name": "fitValid", "comment": "fitValid" },
+    {
+      "type": "filter",
+      "expr": "nhitsCleaned >= 185 ",
+      "name": "nhitsCleaned"
+    },
+    {
+      "type": "filter",
+      "expr": "!retrigger",
+      "comment": "No retrigger",
+      "name": "retrigger"
+    },
+    {
+      "type": "filter",
+      "expr": "scintFit == true",
+      "name": "scintFit",
+      "comment": "scintFit"
+    },
+    {
+      "type": "filter",
+      "expr": "fitValid == true",
+      "name": "fitValid",
+      "comment": "fitValid"
+    },
+    {
+      "type": "coincidence",
+      "comment": "IBD pair with higher prompt maximum energy",
+      "time_window": 2e6,
+      "delta_r_limit": 2500,
+      "label": "IBD",
+      "prompt_expr": "(energy > 0.9 && energy < 50.0) && (posr_av < 5800)",
+      "delayed_expr": "(energy > 1.85 && energy < 2.50) && (posr_av < 5800)"
+    },
+    {
+      "type": "coincidence",
+      "comment": "IBD pair with higher prompt maximum energy, no FV on neutron",
+      "time_window": 2e6,
+      "delta_r_limit": 2500,
+      "label": "IBD_no_FV_ncap",
+      "prompt_expr": "(energy > 0.9 && energy < 50.0) && (posr_av < 5800)",
+      "delayed_expr": "(energy > 1.85 && energy < 2.50)"
+    },
     { "type": "report" },
     {
       "type": "snapshot",
@@ -93,7 +132,6 @@
         "mcPosr",
         "isCal",
         "fecdHits",
-        "triggerWord",
         "tubiiWord",
         "waterFit",
         "partialWaterFit",

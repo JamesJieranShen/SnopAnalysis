@@ -1,4 +1,5 @@
 #include "InputProvider.hh"
+#include "TChain.h"
 namespace SnopAnalysis {
 class GlobProvider : public InputProvider {
 public:

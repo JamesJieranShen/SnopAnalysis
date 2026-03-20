@@ -91,9 +91,10 @@ TChainProvider::GetChain(const nlohmann::json& cfg) {
     if (run_sort) std::sort(filelist.begin(), filelist.end());
     for (const std::string& file : filelist) {
       Logger::Trace("Adding file: {}", file);
-      std::string xrootdPath = convertPathToXRootD(file);
-      Logger::Trace("Converted to XRootD path: {} -> {}", file, xrootdPath);
-      result->Add(xrootdPath.c_str());
+      // std::string xrootdPath = convertPathToXRootD(file);
+      // Logger::Trace("Converted to XRootD path: {} -> {}", file, xrootdPath);
+      // result->Add(xrootdPath.c_str());
+      result->Add(file.c_str());
     }
     if (filelist.empty()) {
       Logger::Warn("No files matched the pattern: {}", pattern);

@@ -17,7 +17,6 @@
       "comment": "remove bad runs",
       "name": "BadRuns"
     },
-    { "type": "filter", "expr": "nhitsCleaned > 200", "name": "nhitsCleaned" }, // should be removed after reprocessing
     { "type": "filter", "expr": "posr_av < 3300", "comment": "fiducial volume R < 3.3m", "name": "FiducialVolume" },
     {
       "type": "snapshot",
