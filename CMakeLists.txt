@@ -40,7 +40,7 @@ find_package(ROOT REQUIRED COMPONENTS RIO Tree Hist Core ROOTDataFrame)
 fetchcontent_declare(
   json
   GIT_REPOSITORY https://github.com/nlohmann/json.git
-  GIT_TAG        v3.12.0
+  GIT_TAG        develop
 )
 fetchcontent_makeavailable(json)
 

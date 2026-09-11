@@ -10,9 +10,13 @@ public:
 private:
   double fTimeWindow;
   double fDeltaRWindow;
+  bool fUseDeltaR = false;
+  bool fDetail = false;
+  std::string fLabel;
   std::string fPromptTagName, fDelayedTagName;
   std::string fPromptExpr, fDelayedExpr;
   std::string fTimeColumn;
+  std::string fIdColumn;
   std::array<std::string, 3> fPosColumns;
 };
 

@@ -13,18 +13,32 @@ Create a new column that aliases (renames) another column.
 
 ## CoincidenceStep
 
-Mark _prompt_ and _delayed_ tags based on time and spatial coincidence windows. This step considers all prompt candidates, not just the closest ones in time.
+Mark _prompt_ and _follower_ tags based on time and spatial coincidence windows. This step considers all prompt candidates, not just the closest ones in time.
 
 **JSON keys:**
 
 - `delayed_expr`: expression to select the delayed event candidates.
-- `delayed_tag_name`: name of the new column that tags all delayed events.
 - `delta_r_limit`: max distance between prompt and delayed events (Optional. Default is no delta_r limit).
+- `detail`: also record the deltaT and deltaR of each event's closest pair (Optional. Default `false`).
+- `id_column`: column identifying an event, recorded as the partner reference (Optional. Default is `eventID`).
+- `label`: prefix for all columns this step adds.
 - `pos_columns`: column names for the X, Y, Z coordinates of event positions (Optional. Default is `posx`, `posy`, and `posz`).
 - `prompt_expr`: expression to select the prompt event candidates.
-- `prompt_tag_name`: name of the new column that tags all prompt events. _All events that passes `prompt_expr` will be tagged as prompt, event if they do not pair with any delayed events._
-- `time_column`: Column to use as the time of the event.
 - `time_window`: Max time between a delayed and prompt event.
+
+**Columns added:**
+
+- `<label>_prompt`: tags all prompt events. _All events that pass `prompt_expr` will be tagged as prompt, even if they do not pair with any delayed events._
+- `<label>_follower`: tags all delayed events that pair with a prompt.
+- `<label>_prompt_eventID`: on follower events, the `id_column` of the pairing prompt closest in time. `-1` otherwise.
+- `<label>_follower_eventID`: on prompt events, the `id_column` of the pairing follower closest in time. `-1` otherwise.
+
+With `detail` enabled, four more columns record the separation to that same closest partner, `NaN` where there is none:
+
+- `<label>_prompt_dt`, `<label>_prompt_dr`: on follower events, deltaT (ns) and deltaR to its closest prompt.
+- `<label>_follower_dt`, `<label>_follower_dr`: on prompt events, deltaT (ns) and deltaR to its closest follower.
+
+> **Notes:** The pairing is many-to-many — a prompt may have many followers, and a follower may have several prompts. The `_eventID`/`_dt`/`_dr` columns only ever describe the **closest in time** partner, so they are lossy when the fan-out is large. Prompt-side and follower-side columns are kept separate because one event can be both a prompt and a follower. `deltaR` is reported even when no `delta_r_limit` is set (no cut is applied), but `detail` then forces `pos_columns` to be read, which a step without `delta_r_limit` would otherwise skip entirely.
 
 ## DefineStep
 

@@ -60,7 +60,8 @@ main(int argc, char** argv) {
   nlohmann::json config = nlohmann::json::parse(configFile,
                                                 nullptr, // no parser callback
                                                 true,    // allow exceptions
-                                                true     // allow comments
+                                                true,    // allow comments
+                                                true     // allow trailing commas
   );
   std::shared_ptr<Context> theContext = std::make_shared<Context>(MakeContext(config, argc, argv));
   theContext->mt_threads = threads;

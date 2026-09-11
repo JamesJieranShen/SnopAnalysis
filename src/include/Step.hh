@@ -17,12 +17,38 @@ demangle(const char* mangled) {
 }
 
 namespace SnopAnalysis {
+
+/// Define a column, overwriting an existing one of the same name when the step opts in.
+/// Define throws if the column already exists and Redefine throws if it does not, so a step that
+/// may run over a file already carrying its output has to pick based on what is actually present.
+template <typename Expr>
+inline ROOT::RDF::RNode
+DefineColumn(ROOT::RDF::RNode node, const std::string& name, Expr&& expr, bool overwrite) {
+  if (overwrite && node.HasColumn(name)) {
+    Logger::Debug("Overwriting existing column {}", name);
+    return node.Redefine(name, std::forward<Expr>(expr));
+  }
+  return node.Define(name, std::forward<Expr>(expr));
+}
+
+template <typename Expr>
+inline ROOT::RDF::RNode
+DefineColumn(ROOT::RDF::RNode node, const std::string& name, Expr&& expr, const ROOT::RDF::ColumnNames_t& columns,
+             bool overwrite) {
+  if (overwrite && node.HasColumn(name)) {
+    Logger::Debug("Overwriting existing column {}", name);
+    return node.Redefine(name, std::forward<Expr>(expr), columns);
+  }
+  return node.Define(name, std::forward<Expr>(expr), columns);
+}
+
 class Step {
 public:
   virtual ~Step() = default;
   virtual void Configure(const nlohmann::json& config) {
     fComment = config.value("comment", "");
     fSequentialOnly = config.value("sequential_only", false);
+    fRedefine = config.value("redefine", false);
   }
   ROOT::RDF::RNode Execute(ROOT::RDF::RNode input) {
     if (fSequentialOnly && ROOT::IsImplicitMTEnabled()) {
@@ -53,6 +79,8 @@ protected:
   size_t fStepID = static_cast<size_t>(-1); // default invalid
   std::string fComment;
   bool fSequentialOnly = false;
+  // Honoured only by steps that add columns; pass it to DefineColumn above.
+  bool fRedefine = false;
   std::shared_ptr<const Context> fContext;
 };
 

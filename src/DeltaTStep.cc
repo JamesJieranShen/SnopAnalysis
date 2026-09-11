@@ -4,6 +4,9 @@
 #include "StepRegistry.hh"
 #include "util.hh"
 
+#include <memory>
+#include <vector>
+
 namespace SnopAnalysis {
 
 void
@@ -15,34 +18,31 @@ DeltaTStep::Configure(const nlohmann::json& config) {
 
 ROOT::RDF::RNode
 DeltaTStep::DoExecute(ROOT::RDF::RNode input) {
-  auto df_cached = input.Cache({"clockCount50"});
-  std::vector<ULong64_t> rdfentry = input.Take<ULong64_t>("rdfentry_").GetValue();
-  std::vector<ULong64_t> times = df_cached.Take<ULong64_t>("clockCount50").GetValue();
+  // delta_t only depends on the previous event, so the times are streamed rather than
+  // materialised. The results are indexed by rdfentry_ directly, which stays correct if the
+  // input is filtered: entries that never arrive keep their default and are never looked up.
   std::vector<ULong64_t> delta_ts;
-  delta_ts.reserve(times.size());
-  ULong64_t previous_time = 99999;
-  for (ULong64_t current_time : times) {
-    if (previous_time == 99999) {
-      delta_ts.push_back(0);
-    } else {
-      ULong64_t delta_t = DeltaT_Clock50(previous_time, current_time);
-      delta_ts.push_back(delta_t);
-    }
-    previous_time = current_time;
-  }
-  auto result = input.Define(fName,
-                             [rdfentry, delta_ts](ULong64_t entry) {
-                               auto it = std::lower_bound(rdfentry.begin(), rdfentry.end(), entry);
-                               if (it != rdfentry.end() && *it == entry) {
-                                 size_t index = std::distance(rdfentry.begin(), it);
-                                 return delta_ts[index];
-                               } else {
-                                 Logger::Warn("DeltaTStep: Entry {} not found in rdfentry_", entry);
-                                 return ULong64_t(0);
-                               }
-                             },
-                             {"rdfentry_"});
-  return result;
+  bool first = true;
+  ULong64_t previous_time = 0;
+  input.Foreach(
+      [&](ULong64_t entry, ULong64_t current_time) {
+        if (entry >= delta_ts.size()) delta_ts.resize(entry + 1, 0);
+        delta_ts[entry] = first ? 0 : DeltaT_Clock50(previous_time, current_time);
+        previous_time = current_time;
+        first = false;
+      },
+      {"rdfentry_", "clockCount50"});
+
+  return DefineColumn(
+      input, fName,
+      [deltas = std::make_shared<const std::vector<ULong64_t>>(std::move(delta_ts))](ULong64_t entry) {
+        if (entry >= deltas->size()) {
+          Logger::Warn("DeltaTStep: Entry {} not found in rdfentry_", entry);
+          return ULong64_t(0);
+        }
+        return (*deltas)[entry];
+      },
+      {"rdfentry_"}, fRedefine);
 }
 
 REGISTER_STEP("delta_t", DeltaTStep);

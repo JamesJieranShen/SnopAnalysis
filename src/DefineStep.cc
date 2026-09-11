@@ -13,7 +13,7 @@ DefineStep::Configure(const nlohmann::json& config) {
 
 ROOT::RDF::RNode
 DefineStep::DoExecute(ROOT::RDF::RNode input) {
-  return input.Define(fName, fExpression);
+  return DefineColumn(input, fName, fExpression, fRedefine);
 }
 
 REGISTER_STEP("define", DefineStep);
